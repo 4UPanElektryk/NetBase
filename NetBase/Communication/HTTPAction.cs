@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace NetBase.Communication
+﻿namespace NetBase.Communication
 {
 	public enum HTTPAction
 	{
+		GET,
+		POST,
+		PUT,
+		DELETE
 	}
 }

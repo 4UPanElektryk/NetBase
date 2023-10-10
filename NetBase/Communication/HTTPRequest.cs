@@ -12,5 +12,6 @@ namespace NetBase.Communication
 		public string HTTPVersion;
 		public HTTPAction HTTPAction;
 		public Dictionary<string,string> Cookies;
+		public List<string> OtherHeaders;
 	}
 }

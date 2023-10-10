@@ -15,6 +15,7 @@ namespace NetBase.Communication
 		}
 		public void ImportCookies(string data)
 		{
+
 		}
 		public string ExportCoookies()
 		{
