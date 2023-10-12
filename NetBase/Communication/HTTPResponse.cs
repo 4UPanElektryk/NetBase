@@ -10,7 +10,6 @@ namespace NetBase.Communication
 	public class HTTPResponse
 	{
 		public string ReturnCode;
-		public string ReturnMessage;
-		public HTTPCookie[] ToSend;
+		public HTTPCookies ToSend;
 	}
 }

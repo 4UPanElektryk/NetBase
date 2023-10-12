@@ -1,19 +1,15 @@
 ﻿using SimpleLogs4Net;
 using SimpleTCP;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
 using System.Text;
-using System.Threading.Tasks;
+using NetBase.Configs;
 
 namespace NetBase
 {
 	public class Server
 	{
 		static SimpleTcpServer server;
-		Conf
-		public static void Start(Confg confg)
+		public static void Start(ServerConfig config)
 		{
 			server = new SimpleTcpServer
 			{
@@ -23,7 +19,7 @@ namespace NetBase
 			server.DataReceived += Server_DataReceived;
 			try
 			{
-				server.Start(IPAddress.Parse(Config._Server.IP), Config._Server.Port);
+				server.Start(config.address, config.port);
 			}
 			catch
 			{
@@ -41,7 +37,7 @@ namespace NetBase
 		}
 		private static void Server_DataReceived(object sender, Message e)
 		{
-			string msg = e.MessageString;
+			/*string msg = e.MessageString;
 			string path = e.MessageString.Split(' ')[1];
 			string replyline = "";
 			if (e.MessageString.StartsWith("GET"))
@@ -65,12 +61,7 @@ namespace NetBase
 					replyline += item + "\r\n";
 				}
 			}
-			if (Config._Server.ServiceMode)
-			{
-				Log.Write("Server Data Ricived: " + e.MessageString);
-				Log.Write(replyline);
-			}
-			e.ReplyLine(replyline);
+			e.ReplyLine(replyline);*/
 		}
 		public static string ExtractCookies(string text)
 		{

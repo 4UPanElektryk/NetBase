@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NetBase
+namespace NetBase.Templating
 {
-	internal class ServerConfig
+	internal class HTMLTemplate
 	{
 	}
 }

@@ -17,9 +17,9 @@ namespace NetBase.Communication
 		{
 
 		}
-		public string ExportCoookies()
+		/*public string ExportCoookies()
 		{
 			
-		}
+		}*/
 	}
 }

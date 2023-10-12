@@ -53,16 +53,23 @@
     <Compile Include="Communication\HTTPCookies.cs" />
     <Compile Include="Communication\HTTPRequest.cs" />
     <Compile Include="Communication\HTTPResponse.cs" />
+    <Compile Include="FileProvider\IFileLoader.cs" />
+    <Compile Include="FileProvider\LocalFileLoader.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Server.cs" />
-    <Compile Include="ServerConfig.cs" />
-    <Compile Include="Templating\TCmponent.cs" />
+    <Compile Include="Configs\ServerConfig.cs" />
+    <Compile Include="Templating\TComponent.cs" />
     <Compile Include="Templating\DataProvider.cs" />
+    <Compile Include="Templating\TComponentManager.cs" />
+    <Compile Include="Templating\HTMLTemplate.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+    <None Include="Tests\test.comp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
