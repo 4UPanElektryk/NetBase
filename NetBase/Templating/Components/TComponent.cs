@@ -1,17 +1,14 @@
-﻿using System.IO;
-using System.Text.RegularExpressions;
-using NetBase.FileProvider;
+﻿using System.Text.RegularExpressions;
 
-namespace NetBase.Templating
+namespace NetBase.Templating.Components
 {
 	public class TComponent
 	{
-		private readonly string component;
+		public string component;
 		public readonly string AssetName;
-		public TComponent(string path, IFileLoader loader)
+		public TComponent(string name)
 		{
-			AssetName = path;
-			component = loader.Load(path);
+			AssetName = name;
 		}
 		// Component would be with $name$
 		public string Use(DataProvider provider)

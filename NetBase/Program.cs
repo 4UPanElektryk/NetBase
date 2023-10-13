@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using NetBase.Templating.Components;
 using NetBase.Templating;
 using NetBase.FileProvider;
 
@@ -10,6 +11,7 @@ namespace NetBase
 		static void Main(string[] args)
 		{
 			LocalFileLoader loader = new LocalFileLoader(AppDomain.CurrentDomain.BaseDirectory + "Tests\\");
+			TComponentManager manager = new TComponentManager(loader);
 			DataProvider provider = new DataProvider();
 			provider.Data.Add(
 				new Dictionary<string, string> 
@@ -29,8 +31,10 @@ namespace NetBase
 					{ "filled", "funny mic" }
 				}
 			);
-			TComponent component = new TComponent("test.comp", loader);
+			TComponent component = TComponentManager.GetComponet("test.comp");
 			Console.WriteLine(component.Use(provider));
+			TComponent Qomponent = TComponentManager.GetComponet("ftest.comp");
+			Console.WriteLine(Qomponent.Use(provider));
 			Console.ReadLine();
 		}
 	}

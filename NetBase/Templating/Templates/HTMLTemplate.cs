@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NetBase.Templating
+namespace NetBase.Templating.Template
 {
-	internal class HTMLTemplate
+	public class HTMLTemplate
 	{
 	}
 }

@@ -15,7 +15,12 @@ namespace NetBase.FileProvider
 		}
 		public string[] GetFiles()
 		{
-			return Directory.GetFiles(directory);
+			string[] files = Directory.GetFiles(directory);
+			for (int i = 0; i < files.Length; i++)
+			{
+				files[i] = files[i].Substring(directory.Length);
+			}
+			return files;
 		}
 	}
 }
