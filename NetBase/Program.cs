@@ -10,7 +10,9 @@ namespace NetBase
 	{
 		static void Main(string[] args)
 		{
-			LocalFileLoader loader = new LocalFileLoader(AppDomain.CurrentDomain.BaseDirectory + "Tests\\");
+			IFileLoader loader =
+				new LocalFileLoader(AppDomain.CurrentDomain.BaseDirectory + "Tests\\"); 
+				//new SingularFSFileLoader("data.fs_");
 			TComponentManager manager = new TComponentManager(loader);
 			DataProvider provider = new DataProvider();
 			provider.Data.Add(

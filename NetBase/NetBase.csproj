@@ -39,6 +39,9 @@
     <Reference Include="SimpleTCP, Version=1.0.24.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SimpleTCP.1.0.24\lib\net45\SimpleTCP.dll</HintPath>
     </Reference>
+    <Reference Include="SingularFS">
+      <HintPath>..\..\..\..\..\Downloads\SingularFS.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -55,6 +58,7 @@
     <Compile Include="Communication\HTTPResponse.cs" />
     <Compile Include="FileProvider\IFileLoader.cs" />
     <Compile Include="FileProvider\LocalFileLoader.cs" />
+    <Compile Include="FileProvider\SingularFSFileLoader.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Server.cs" />
@@ -73,7 +77,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Tests\test.t.html" />
+    <Content Include="Tests\test.t.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
