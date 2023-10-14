@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using NetBase.Templating.Components;
 using NetBase.Templating;
 using NetBase.FileProvider;
+using System.Collections;
 
 namespace NetBase
 {
@@ -15,24 +16,22 @@ namespace NetBase
 				//new SingularFSFileLoader("data.fs_");
 			TComponentManager manager = new TComponentManager(loader);
 			DataProvider provider = new DataProvider();
-			provider.Data.Add(
-				new Dictionary<string, string> 
-				{ 
-					{ "filled", "thing" } 
-				}
-			);
-			provider.Data.Add(
+			provider.Data.AddRange( 
+				new List<Dictionary<string,string>> {
+				new Dictionary<string, string>
+				{
+					{ "filled", "thing" },
+					{ "element", "thing" }
+				},
 				new Dictionary<string, string>
 				{
 					{ "filled", "or not" }
-				}
-			);
-			provider.Data.Add(
+				},
 				new Dictionary<string, string>
 				{
 					{ "filled", "funny mic" }
 				}
-			);
+			});
 			TComponent component = TComponentManager.GetComponet("test.comp");
 			Console.WriteLine(component.Use(provider));
 			TComponent Qomponent = TComponentManager.GetComponet("ftest.comp");
