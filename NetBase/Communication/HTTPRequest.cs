@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace NetBase.Communication
 {
-	public class HTTPRequest
+	public struct HTTPRequest
 	{
+		public string Url;
+		public Dictionary<string, string> URLParamenters;
 		public string HTTPVersion;
-		public HTTPAction HTTPAction;
-		public Dictionary<string,string> Cookies;
-		public List<string> OtherHeaders;
+		public HTTPMethod Method;
+		public Dictionary<string,string> Headers;
+		public HTTPCookies Cookies;
+		public string body;
 	}
 }
