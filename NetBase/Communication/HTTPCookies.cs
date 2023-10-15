@@ -15,11 +15,21 @@ namespace NetBase.Communication
 		}
 		public void ImportCookies(string data)
 		{
-
+			string[] sd = data.Split('&');
+			foreach (string s in sd) 
+			{
+				string[] d = s.Split('=');
+				Cookies.Add(d[0], d[1]);
+			}
 		}
-		/*public string ExportCoookies()
+		public string[] ExportCookies()
 		{
-			
-		}*/
+			List<string> output = new List<string>();
+			foreach (var item in Cookies)
+			{
+				output.Add($"{item.Key}={item.Value}");
+			}
+			return output.ToArray();
+		}
 	}
 }

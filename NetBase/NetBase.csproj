@@ -40,7 +40,8 @@
       <HintPath>..\packages\SimpleTCP.1.0.24\lib\net45\SimpleTCP.dll</HintPath>
     </Reference>
     <Reference Include="SingularFS">
-      <HintPath>..\..\..\..\..\Downloads\SingularFS.dll</HintPath>
+      <HintPath>..\..\..\..\Downloads\SingularFS.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

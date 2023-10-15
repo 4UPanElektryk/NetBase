@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using NetBase.Templating.Components;
 using NetBase.Templating;
 using NetBase.FileProvider;
-using System.Collections;
+using NetBase.Communication;
 
 namespace NetBase
 {
@@ -11,6 +11,7 @@ namespace NetBase
 	{
 		static void Main(string[] args)
 		{
+			#region Templates
 			IFileLoader loader =
 				new LocalFileLoader(AppDomain.CurrentDomain.BaseDirectory + "Tests\\"); 
 				//new SingularFSFileLoader("data.fs_");
@@ -36,7 +37,17 @@ namespace NetBase
 			Console.WriteLine(component.Use(provider));
 			TComponent Qomponent = TComponentManager.GetComponet("ftest.comp");
 			Console.WriteLine(Qomponent.Use(provider));
+			#endregion
+			#region Comms
+			HTTPResponse response = new HTTPResponse(
+				StatusCode.OK,
+				new HTTPCookies(),
+				"<html><head><title>Test</title></head><body><h1>Default Response</h1></body></html>",
+				ContentType.text_html
+			);
+            Console.WriteLine(response.ToString());
+            #endregion
 			Console.ReadLine();
-		}
+        }
 	}
 }
