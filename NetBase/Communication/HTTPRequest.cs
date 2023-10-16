@@ -32,9 +32,9 @@ namespace NetBase.Communication
 			if (path.Contains("?"))
 			{
 				request.Url = path.Split('?')[0];
-				if (path.Split('?')[0].Contains("&"))
+				if (path.Split('?')[1].Contains("&"))
 				{
-					foreach (var item in path.Split('&'))
+					foreach (var item in path.Split('?')[1].Split('&'))
 					{
 						request.URLParamenters.Add(
 							item.Split('=')[0], 

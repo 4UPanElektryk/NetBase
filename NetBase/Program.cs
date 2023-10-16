@@ -1,6 +1,9 @@
 ﻿using System;
 using NetBase.Communication;
 using System.Net;
+using NetBase.Templating.Components;
+using NetBase.FileProvider;
+using NetBase.Templating;
 
 namespace NetBase
 {
@@ -27,21 +30,17 @@ namespace NetBase
 					new HTTPCookies()
 				);
 			}
-			if (request.Cookies.Get("test") != null)
+			ImportableComponent component = new ImportableComponent("test.comp",new LocalFileLoader("test\\"));
+			DataProvider provider = new DataProvider();
+			foreach (var item in request.URLParamenters)
 			{
-				return new HTTPResponse(
-					StatusCode.OK,
-					new HTTPCookies(),
-					$"<html><head><title>Test</title></head><body><h1>Default Response</h1>Cookie was set</body></html>",
-					ContentType.text_html
-				);
+				provider.Data.Add(new System.Collections.Generic.Dictionary<string, string> { { "pram", item.Key }, { "val", item.Value } });
 			}
-			HTTPCookies c = new HTTPCookies();
-			c.Set("test", "d");
+
 			HTTPResponse response = new HTTPResponse(
 				StatusCode.OK,
-				c,
-				$"<html><head><title>Test</title></head><body><h1>Default Response</h1>{request.Url}</body></html>",
+				new HTTPCookies(),
+				$"<html><head><title>Test</title></head><body><h1>Default Response</h1><ul>{component.Use(provider)}</ul></body></html>",
 				ContentType.text_html
 			);
 			return response;
