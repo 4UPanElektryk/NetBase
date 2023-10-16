@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 
 namespace NetBase.Communication
 {
@@ -16,6 +18,7 @@ namespace NetBase.Communication
 		{
 			URLParamenters = new Dictionary<string, string>();
 			Headers = new Dictionary<string, string>();
+			Cookies = new HTTPCookies();
 		}
 		public static HTTPRequest Parse(string data)
 		{
@@ -50,8 +53,23 @@ namespace NetBase.Communication
 			}
 			else
 			{
-				request.Url = path;
+				request.Url = path.TrimStart('/');
 			}
+			for (int i = 1; i < lines.Count() - 1; i++)
+			{
+				if (lines[i].Split(':')[0] == "Cookie")
+				{
+					request.Cookies.ImportCookies(lines[i].Split(':')[1].TrimStart(' '));
+				}
+				else
+				{
+					request.Headers.Add(
+						lines[i].Split(':')[0],
+						lines[i].Split(':')[1].TrimStart(' ')
+					);
+				}
+			}
+			request.body = lines.Last();
 			return request;
 		}
 	}

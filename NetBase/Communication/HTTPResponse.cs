@@ -20,13 +20,13 @@ namespace NetBase.Communication
 			Body = body;
 		}
 
-		public string ToString()
+		public override string ToString()
 		{
 			string ReasonPhrase = Enum.GetName(typeof(StatusCode), (int)Status).Replace("_", " ");
 			string contType = Enum.GetName(typeof(ContentType), (int)contentType).Replace("_", "/");
 			if (Body != "")
 			{
-				Headers.Add("Content-Type", contType);
+				Headers.Add("Content-Type", contType + "; charset=utf-8");
 				Headers.Add("Content-Length", Encoding.UTF8.GetByteCount(Body).ToString());
 			}
 			string Response =

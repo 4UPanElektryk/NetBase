@@ -41,36 +41,29 @@ namespace NetBase
 		private static void Server_DataReceived(object sender, Message e)
 		{
 			HTTPRequest r = HTTPRequest.Parse(e.MessageString);
-			HTTPResponse response = router.Invoke(r);
-			if (response != null) 
+			HTTPResponse response;
+			try
 			{
-				e.ReplyLine(response.ToString());
+				response = router.Invoke(r);
 			}
-			/*string msg = e.MessageString;
-			string path = e.MessageString.Split(' ')[1];
-			string replyline = "";
-			if (e.MessageString.StartsWith("GET"))
+			catch (Exception ex)
 			{
-				path = path.TrimStart('/');
-				if (path == "")
-				{
-					path = "index.html";
-				}
-				foreach (string item in RequestMenager.Run(path, ExtractCookies(msg)))
-				{
-					replyline += item + "\r\n";
-				}
+				response = new HTTPResponse(
+					StatusCode.Internal_Server_Error,
+					new HTTPCookies(),
+					$"<html><head>" +
+					$"<title>500 Internal Server Error</title>" +
+					$"</head><body>" +
+					$"<h1>500 Internal Server Error</h1>" +
+					$"<h2>{ex.Message}</h2>" +
+					$"<p>Server Encountered an exception while trying to complete the reques</p>" +
+					$"<p>{ex.StackTrace}</p>" +
+					$"<hr> <a href=\"https://github.com/4UPanElektryk/NetBase\">NetBase</a>" +
+					$"</body></html>",
+					ContentType.text_html
+				);
 			}
-			if (e.MessageString.StartsWith("POST"))
-			{
-				string[] lines = msg.Split(new string[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
-				string[] data = lines[lines.Length - 1].Replace("%40", "@").Split('&');
-				foreach (string item in PostsMenager.GetPost(path, data, ExtractCookies(msg)))
-				{
-					replyline += item + "\r\n";
-				}
-			}
-			e.ReplyLine(replyline);*/
+			e.ReplyLine(response.ToString());
 		}
 	}
 }

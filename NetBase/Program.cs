@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using NetBase.Templating.Components;
-using NetBase.Templating;
-using NetBase.FileProvider;
 using NetBase.Communication;
 using System.Net;
 
@@ -12,45 +8,40 @@ namespace NetBase
 	{
 		static void Main(string[] args)
 		{
-			#region Templates
-			IFileLoader loader =
-				new LocalFileLoader(AppDomain.CurrentDomain.BaseDirectory + "Tests\\"); 
-				//new SingularFSFileLoader("data.fs_");
-			TComponentManager manager = new TComponentManager(loader);
-			DataProvider provider = new DataProvider();
-			provider.Data.AddRange( 
-				new List<Dictionary<string,string>> {
-				new Dictionary<string, string>
-				{
-					{ "filled", "thing" },
-					{ "element", "thing" }
-				},
-				new Dictionary<string, string>
-				{
-					{ "filled", "or not" }
-				},
-				new Dictionary<string, string>
-				{
-					{ "filled", "funny mic" }
+			Server.router = Funcrouter;
+			Server.Start(
+				new Configs.ServerConfig() 
+				{ 
+					address = IPAddress.Loopback, 
+					port = 8080
 				}
-			});
-			TComponent component = TComponentManager.GetComponet("test.comp");
-			Console.WriteLine(component.Use(provider));
-			TComponent Qomponent = TComponentManager.GetComponet("ftest.comp");
-			Console.WriteLine(Qomponent.Use(provider));
-			#endregion
-			#region Comms
-			Server.Start(new Configs.ServerConfig() { address = IPAddress.Loopback, port = 8080});
-			Server.router = funcrouter;
-            #endregion
+			);
 			Console.ReadLine();
-        }
-		public static HTTPResponse funcrouter(HTTPRequest request)
+		}
+		public static HTTPResponse Funcrouter(HTTPRequest request)
 		{
+			if (request.Url.EndsWith(".ico"))
+			{
+				return new HTTPResponse(
+					StatusCode.Not_Found,
+					new HTTPCookies()
+				);
+			}
+			if (request.Cookies.Get("test") != null)
+			{
+				return new HTTPResponse(
+					StatusCode.OK,
+					new HTTPCookies(),
+					$"<html><head><title>Test</title></head><body><h1>Default Response</h1>Cookie was set</body></html>",
+					ContentType.text_html
+				);
+			}
+			HTTPCookies c = new HTTPCookies();
+			c.Set("test", "d");
 			HTTPResponse response = new HTTPResponse(
 				StatusCode.OK,
-				new HTTPCookies(),
-				"<html><head><title>Test</title></head><body><h1>Default Response</h1></body></html>",
+				c,
+				$"<html><head><title>Test</title></head><body><h1>Default Response</h1>{request.Url}</body></html>",
 				ContentType.text_html
 			);
 			return response;
