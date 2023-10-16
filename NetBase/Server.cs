@@ -3,12 +3,15 @@ using SimpleTCP;
 using System;
 using System.Text;
 using NetBase.Configs;
+using NetBase.Communication;
 
 namespace NetBase
 {
 	public class Server
 	{
 		static SimpleTcpServer server;
+		public delegate HTTPResponse Router(HTTPRequest request);
+		public static Router router;
 		public static void Start(ServerConfig config)
 		{
 			server = new SimpleTcpServer
@@ -37,6 +40,12 @@ namespace NetBase
 		}
 		private static void Server_DataReceived(object sender, Message e)
 		{
+			HTTPRequest r = HTTPRequest.Parse(e.MessageString);
+			HTTPResponse response = router.Invoke(r);
+			if (response != null) 
+			{
+				e.ReplyLine(response.ToString());
+			}
 			/*string msg = e.MessageString;
 			string path = e.MessageString.Split(' ')[1];
 			string replyline = "";
@@ -62,21 +71,6 @@ namespace NetBase
 				}
 			}
 			e.ReplyLine(replyline);*/
-		}
-		public static string ExtractCookies(string text)
-		{
-			string cookie = "";
-			string[] request = text.Split(new string[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
-			foreach (string item in request)
-			{
-				if (item.StartsWith("Cookie: "))
-				{
-					cookie = item.Split(':')[1];
-					cookie = cookie.TrimStart(' ');
-					return cookie;
-				}
-			}
-			return cookie;
 		}
 	}
 }

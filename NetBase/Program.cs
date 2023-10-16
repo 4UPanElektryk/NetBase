@@ -4,6 +4,7 @@ using NetBase.Templating.Components;
 using NetBase.Templating;
 using NetBase.FileProvider;
 using NetBase.Communication;
+using System.Net;
 
 namespace NetBase
 {
@@ -39,15 +40,20 @@ namespace NetBase
 			Console.WriteLine(Qomponent.Use(provider));
 			#endregion
 			#region Comms
+			Server.Start(new Configs.ServerConfig() { address = IPAddress.Loopback, port = 8080});
+			Server.router = funcrouter;
+            #endregion
+			Console.ReadLine();
+        }
+		public static HTTPResponse funcrouter(HTTPRequest request)
+		{
 			HTTPResponse response = new HTTPResponse(
 				StatusCode.OK,
 				new HTTPCookies(),
 				"<html><head><title>Test</title></head><body><h1>Default Response</h1></body></html>",
 				ContentType.text_html
 			);
-            Console.WriteLine(response.ToString());
-            #endregion
-			Console.ReadLine();
-        }
+			return response;
+		}
 	}
 }

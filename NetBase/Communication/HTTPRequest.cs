@@ -21,9 +21,11 @@ namespace NetBase.Communication
 		{
 			string[] lines = data.Split("\r\n".ToCharArray(),StringSplitOptions.RemoveEmptyEntries);
 			string path = lines[0].Split(' ')[1];
-			HTTPRequest request = new HTTPRequest();
-			request.Method = (HTTPMethod)Enum.Parse(typeof(HTTPMethod), lines[0].Split(' ')[0]);
-			request.HTTPVersion = lines[0].Split(' ')[2];
+			HTTPRequest request = new HTTPRequest
+			{
+				Method = (HTTPMethod)Enum.Parse(typeof(HTTPMethod), lines[0].Split(' ')[0]),
+				HTTPVersion = lines[0].Split(' ')[2]
+			};
 			if (path.Contains("?"))
 			{
 				request.Url = path.Split('?')[0];
