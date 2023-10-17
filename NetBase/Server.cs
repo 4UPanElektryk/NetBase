@@ -30,7 +30,7 @@ namespace NetBase
 			}
 			if (server.IsStarted)
 			{
-				Log.AddEvent(new Event("Server Started", EType.Informtion));
+				Log.Write($"Server Started on http://{config.address}:{config.port}/", EType.Informtion);
 			}
 			else
 			{
@@ -62,6 +62,18 @@ namespace NetBase
 					$"</body></html>",
 					ContentType.text_html
 				);
+			}
+			if (response.Body == "" && (int)response.Status >= 400)
+			{
+				string ReasonPhrase = Enum.GetName(typeof(StatusCode), (int)response.Status).Replace("_", " ");
+				response.Body =
+					$"<html><head>" +
+					$"<title>{(int)response.Status} {ReasonPhrase}</title>" +
+					$"</head><body>" +
+					$"<center><h1>{(int)response.Status} {ReasonPhrase}</h1></center>" +
+					$"<hr><center><a href=\"https://github.com/4UPanElektryk/NetBase\">NetBase</a></center>" +
+					$"</body></html>";
+				response.contentType = ContentType.text_html;
 			}
 			e.ReplyLine(response.ToString());
 		}

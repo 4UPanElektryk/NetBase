@@ -4,6 +4,7 @@ using System.Net;
 using NetBase.Templating.Components;
 using NetBase.FileProvider;
 using NetBase.Templating;
+using SimpleLogs4Net;
 
 namespace NetBase
 {
@@ -11,6 +12,7 @@ namespace NetBase
 	{
 		static void Main(string[] args)
 		{
+			LogConfiguration.Initialize("Logs\\",OutputStream.Both);
 			Server.router = Funcrouter;
 			Server.Start(
 				new Configs.ServerConfig() 
@@ -26,7 +28,7 @@ namespace NetBase
 			if (request.Url.EndsWith(".ico"))
 			{
 				return new HTTPResponse(
-					StatusCode.Not_Found,
+					StatusCode.Service_Unavailable,
 					new HTTPCookies()
 				);
 			}
@@ -42,6 +44,10 @@ namespace NetBase
 				new HTTPCookies(),
 				$"<html><head><title>Test</title></head><body><h1>Default Response</h1><ul>{component.Use(provider)}</ul></body></html>",
 				ContentType.text_html
+			);
+			response = new HTTPResponse(
+				StatusCode.Forbidden,
+				new HTTPCookies()
 			);
 			return response;
 		}
