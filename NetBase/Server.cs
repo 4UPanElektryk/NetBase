@@ -1,9 +1,9 @@
-﻿using SimpleLogs4Net;
-using SimpleTCP;
+﻿using SimpleTCP;
 using System;
 using System.Text;
 using NetBase.Configs;
 using NetBase.Communication;
+using NetBase.RuntimeLogger;
 
 namespace NetBase
 {
@@ -14,6 +14,7 @@ namespace NetBase
 		public static Router router;
 		public static void Start(ServerConfig config)
 		{
+			new Log("Logs\\");
 			server = new SimpleTcpServer
 			{
 				StringEncoder = Encoding.UTF8,
@@ -26,15 +27,15 @@ namespace NetBase
 			}
 			catch
 			{
-				Log.Write("Startup Error", EType.Error);
+				Log.Write("Startup Error");
 			}
 			if (server.IsStarted)
 			{
-				Log.Write($"Server Started on http://{config.address}:{config.port}/", EType.Informtion);
+				Log.Write($"Server Started on http://{config.address}:{config.port}/");
 			}
 			else
 			{
-				Log.AddEvent(new Event("Server Failed to Start", EType.Informtion));
+				Log.Write("Server Failed to Start");
 			}
 
 		}
@@ -62,6 +63,7 @@ namespace NetBase
 					$"</body></html>",
 					ContentType.text_html
 				);
+				Log.Incident(ex);
 			}
 			if (response.Body == "" && (int)response.Status >= 400)
 			{

@@ -33,9 +33,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="SimpleLogs4Net, Version=3.3.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SimpleLogs4Net.3.3.0\lib\netstandard2.0\SimpleLogs4Net.dll</HintPath>
-    </Reference>
     <Reference Include="SimpleTCP, Version=1.0.24.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SimpleTCP.1.0.24\lib\net45\SimpleTCP.dll</HintPath>
     </Reference>
@@ -64,6 +61,7 @@
     <Compile Include="FileProvider\SingularFSFileLoader.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RuntimeLogger\Log.cs" />
     <Compile Include="Server.cs" />
     <Compile Include="Configs\ServerConfig.cs" />
     <Compile Include="Templating\Components\ImportableComponent.cs" />
@@ -77,9 +75,6 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
-    <None Include="Test\test.comp">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

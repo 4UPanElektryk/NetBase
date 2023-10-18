@@ -3,13 +3,13 @@ using System.Net;
 
 namespace NetBase.Configs
 {
-	public class ServerConfig
+	public struct ServerConfig
 	{
 		/// <summary>
 		/// key is the path on the website
 		/// value is the path on the server
 		/// </summary>
-		public Dictionary<string, string> Router = new Dictionary<string, string>();
+		public Dictionary<string, string> Router;
 		public IPAddress address;
 		public int port;
 	}
