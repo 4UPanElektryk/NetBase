@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetBase", "NetBase\NetBase.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetBase.Tests", "NetBase.Tests\NetBase.Tests.csproj", "{4032A629-0B71-4FD7-BD82-B49AEA6574B4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetBase.Demo", "NetBase.Demo\NetBase.Demo.csproj", "{7916EFC6-9B30-47AF-AF72-5C36963F45E2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{4032A629-0B71-4FD7-BD82-B49AEA6574B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4032A629-0B71-4FD7-BD82-B49AEA6574B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4032A629-0B71-4FD7-BD82-B49AEA6574B4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7916EFC6-9B30-47AF-AF72-5C36963F45E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7916EFC6-9B30-47AF-AF72-5C36963F45E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7916EFC6-9B30-47AF-AF72-5C36963F45E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7916EFC6-9B30-47AF-AF72-5C36963F45E2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{539351DF-FF15-4CF7-866D-3E1628339811}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <RootNamespace>NetBase</RootNamespace>
-    <AssemblyName>NetBase</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <ProjectGuid>{7916EFC6-9B30-47AF-AF72-5C36963F45E2}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>NetBase.Demo</RootNamespace>
+    <AssemblyName>NetBase.Demo</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
@@ -32,17 +32,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject />
-  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="SimpleTCP, Version=1.0.24.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SimpleTCP.1.0.24\lib\net45\SimpleTCP.dll</HintPath>
-    </Reference>
-    <Reference Include="SingularFS">
-      <HintPath>..\..\..\..\Downloads\SingularFS.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -53,32 +43,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Communication\ContentType.cs" />
-    <Compile Include="Communication\HTTPMethod.cs" />
-    <Compile Include="Communication\HTTPCookies.cs" />
-    <Compile Include="Communication\HTTPRequest.cs" />
-    <Compile Include="Communication\HTTPResponse.cs" />
-    <Compile Include="Communication\StatusCode.cs" />
-    <Compile Include="FileProvider\IFileLoader.cs" />
-    <Compile Include="FileProvider\LocalFileLoader.cs" />
-    <Compile Include="FileProvider\SingularFSFileLoader.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RuntimeLogger\Log.cs" />
-    <Compile Include="Server.cs" />
-    <Compile Include="StaticRouting\Rout.cs" />
-    <Compile Include="StaticRouting\Router.cs" />
-    <Compile Include="Templating\Components\ImportableComponent.cs" />
-    <Compile Include="Templating\Components\TComponent.cs" />
-    <Compile Include="Templating\DataProvider.cs" />
-    <Compile Include="Templating\Components\TComponentManager.cs" />
-    <Compile Include="Templating\Templates\Template.cs" />
-    <Compile Include="Templating\Templates\TemplateManager.cs" />
-    <Compile Include="Templating\Templates\ImportableTemplate.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\NetBase\NetBase.csproj">
+      <Project>{539351df-ff15-4cf7-866d-3e1628339811}</Project>
+      <Name>NetBase</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Docs\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

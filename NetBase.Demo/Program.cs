@@ -1,24 +1,24 @@
 ﻿using System;
-using NetBase.Communication;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Mime;
 using System.Net;
+using System.Text;
+using System.Threading.Tasks;
+using NetBase.Communication;
+using NetBase.Templating;
 using NetBase.Templating.Components;
 using NetBase.FileProvider;
-using NetBase.Templating;
+using ContentType = NetBase.Communication.ContentType;
 
-namespace NetBase
+namespace NetBase.Demo
 {
 	internal class Program
 	{
 		static void Main(string[] args)
 		{
 			Server.router = Funcrouter;
-			Server.Start(
-				new Configs.ServerConfig() 
-				{ 
-					address = IPAddress.Loopback, 
-					port = 8080
-				}
-			);
+			Server.Start(IPAddress.Loopback,8080);
 			Console.ReadLine();
 		}
 		public static HTTPResponse Funcrouter(HTTPRequest request)
@@ -30,11 +30,11 @@ namespace NetBase
 					new HTTPCookies()
 				);
 			}
-			ImportableComponent component = new ImportableComponent("test.comp",new LocalFileLoader("test\\"));
+			ImportableComponent component = new ImportableComponent("test.comp", new LocalFileLoader("test\\"));
 			DataProvider provider = new DataProvider();
 			foreach (var item in request.URLParamenters)
 			{
-				provider.Data.Add(new System.Collections.Generic.Dictionary<string, string> { { "pram", item.Key }, { "val", item.Value } });
+				provider.Data.Add(new Dictionary<string, string> { { "pram", item.Key }, { "val", item.Value } });
 			}
 
 			HTTPResponse response = new HTTPResponse(

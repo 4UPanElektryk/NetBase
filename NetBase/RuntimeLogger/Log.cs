@@ -28,7 +28,8 @@ namespace NetBase.RuntimeLogger
 		public static void Incident(Exception ex)
 		{
 			string Time = DateTime.UtcNow.ToString("dd_MM_yyyy-HH_mm_ss_FFF") + ".log";
-			File.WriteAllText(Dir + Time,
+			Console.WriteLine($"{Time}|Error:\n{ex}");
+			File.WriteAllText($"{Dir}{Time}.log",
 				ex.ToString()
 			);
 		}

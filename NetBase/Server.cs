@@ -4,15 +4,16 @@ using System.Text;
 using NetBase.Configs;
 using NetBase.Communication;
 using NetBase.RuntimeLogger;
+using System.Net;
 
 namespace NetBase
 {
 	public class Server
 	{
 		static SimpleTcpServer server;
-		public delegate HTTPResponse Router(HTTPRequest request);
-		public static Router router;
-		public static void Start(ServerConfig config)
+		public delegate HTTPResponse DataReceived(HTTPRequest request);
+		public static DataReceived router;
+		public static void Start(IPAddress address, int port)
 		{
 			new Log("Logs\\");
 			server = new SimpleTcpServer
@@ -23,7 +24,7 @@ namespace NetBase
 			server.DataReceived += Server_DataReceived;
 			try
 			{
-				server.Start(config.address, config.port);
+				server.Start(address, port);
 			}
 			catch
 			{
@@ -31,7 +32,7 @@ namespace NetBase
 			}
 			if (server.IsStarted)
 			{
-				Log.Write($"Server Started on http://{config.address}:{config.port}/");
+				Log.Write($"Server Started on http://{address}:{port}/");
 			}
 			else
 			{
@@ -43,6 +44,12 @@ namespace NetBase
 		{
 			HTTPRequest r = HTTPRequest.Parse(e.MessageString);
 			HTTPResponse response;
+			if (StaticRouting.Router.IsStatic(r.Url)) 
+			{
+				response = StaticRouting.Router.Respond(r);
+				e.ReplyLine(response.ToString());
+				return;
+			}
 			try
 			{
 				response = router.Invoke(r);
