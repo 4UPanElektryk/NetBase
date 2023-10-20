@@ -43,7 +43,6 @@ namespace NetBase
 				$"<html><head><title>Test</title></head><body><h1>Default Response</h1><ul>{component.Use(provider)}</ul></body></html>",
 				ContentType.text_html
 			);
-			throw new Exception();
 			return response;
 		}
 	}
