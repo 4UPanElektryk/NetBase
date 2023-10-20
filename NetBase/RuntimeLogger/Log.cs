@@ -12,9 +12,13 @@ namespace NetBase.RuntimeLogger
 		}
 		public static void Write(string input)
 		{
+			if (!Directory.Exists(Dir))
+			{
+				Directory.CreateDirectory(Dir);
+			}
 			if (!File.Exists(Dir + "Latest.Log"))
 			{
-				File.Create(Dir + "Latest.Log");
+				File.WriteAllText(Dir + "Latest.Log","");
 			}
 			string Time = DateTime.UtcNow.ToString("dd.MM.yyyy - HH:mm:ss:FFF");
 			string ToWrite = $"{Time}|{input}\n";

@@ -1,7 +1,6 @@
 ﻿using SimpleTCP;
 using System;
 using System.Text;
-using NetBase.Configs;
 using NetBase.Communication;
 using NetBase.RuntimeLogger;
 using System.Net;

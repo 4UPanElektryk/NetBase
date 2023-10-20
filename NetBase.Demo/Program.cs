@@ -10,6 +10,8 @@ using NetBase.Templating;
 using NetBase.Templating.Components;
 using NetBase.FileProvider;
 using ContentType = NetBase.Communication.ContentType;
+using NetBase.StaticRouting;
+using System.ComponentModel;
 
 namespace NetBase.Demo
 {
@@ -19,6 +21,13 @@ namespace NetBase.Demo
 		{
 			Server.router = Funcrouter;
 			Server.Start(IPAddress.Loopback,8080);
+			LocalFileLoader lo = new LocalFileLoader("Docs\\");
+			Router.RoutingTable.Add(new Rout()
+			{
+				loader = lo,
+				LocalPath = "index.html",
+				ServerPath = ""
+			});
 			Console.ReadLine();
 		}
 		public static HTTPResponse Funcrouter(HTTPRequest request)
@@ -30,13 +39,16 @@ namespace NetBase.Demo
 					new HTTPCookies()
 				);
 			}
-			ImportableComponent component = new ImportableComponent("test.comp", new LocalFileLoader("test\\"));
-			DataProvider provider = new DataProvider();
-			foreach (var item in request.URLParamenters)
+			if (request.Cookies.Get("Logged") == "true")
 			{
-				provider.Data.Add(new Dictionary<string, string> { { "pram", item.Key }, { "val", item.Value } });
+				HTTPResponse response = new HTTPResponse(
+					StatusCode.OK,
+					new HTTPCookies(),
+					$"<html><head><title>Test</title></head><body><h1>Default Response</h1><ul>{component.Use(provider)}</ul></body></html>",
+					ContentType.text_html
+				);
+				return response;
 			}
-
 			HTTPResponse response = new HTTPResponse(
 				StatusCode.OK,
 				new HTTPCookies(),
