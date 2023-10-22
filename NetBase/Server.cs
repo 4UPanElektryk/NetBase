@@ -43,7 +43,7 @@ namespace NetBase
 		{
 			HTTPRequest r = HTTPRequest.Parse(e.MessageString);
 			HTTPResponse response;
-			if (StaticRouting.Router.IsStatic(r.Url)) 
+			if (StaticRouting.Router.IsStatic(r)) 
 			{
 				response = StaticRouting.Router.Respond(r);
 				e.ReplyLine(response.ToString());

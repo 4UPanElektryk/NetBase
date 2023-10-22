@@ -23,10 +23,10 @@ namespace NetBase.Communication
 		}
 		public void ImportCookies(string data)
 		{
-            string[] sd = data.Contains("&") ? data.Split('&'): new string[] { data };
+			string[] sd = data.Contains("&") ? data.Split('&'): new string[] { data };
 			foreach (string s in sd) 
 			{
-                string[] d = s.Split('=');
+				string[] d = s.Split('=');
 				Cookies.Add(d[0], d[1]);
 			}
 		}

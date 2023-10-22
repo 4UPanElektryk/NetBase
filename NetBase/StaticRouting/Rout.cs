@@ -1,4 +1,6 @@
-﻿using NetBase.FileProvider;
+﻿using NetBase.Communication;
+using NetBase.FileProvider;
+using System;
 
 namespace NetBase.StaticRouting
 {
@@ -7,5 +9,6 @@ namespace NetBase.StaticRouting
 		public string LocalPath;
 		public string ServerPath;
 		public IFileLoader loader;
+		public Func<HTTPRequest, bool> OverrideCase;
 	}
 }

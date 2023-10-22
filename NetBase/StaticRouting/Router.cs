@@ -1,4 +1,5 @@
 ﻿using NetBase.Communication;
+using NetBase.FileProvider;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,31 +23,57 @@ namespace NetBase.StaticRouting
 		};
 		public static List<Rout> RoutingTable = new List<Rout>();
 		public static Rout Missing = new Rout();
-		public static bool IsStatic(string name)
+		public static void Add(IFileLoader loader, string LocalPath, string Url, Func<HTTPRequest, bool> Overrdide = null)
+		{
+			if (loader == null)
+				throw new ArgumentNullException(nameof(loader));
+			RoutingTable.Add(new Rout()
+			{
+				loader = loader,
+				LocalPath = LocalPath,
+				ServerPath = Url,
+				OverrideCase = Overrdide,
+			});
+		}
+		public static bool IsStatic(HTTPRequest r)
 		{
 			foreach (var rout in RoutingTable)
 			{
-				if (rout.ServerPath == name)
+				if (rout.ServerPath == r.Url)
 				{
-					return true;
+					if (rout.OverrideCase == null)
+					{
+						return true;
+					}
+					else if (!rout.OverrideCase(r))
+					{
+						return true;
+					}
 				}
 			}
 			return false;
 		}
-		private static Rout GetRout(string name) 
+		private static Rout GetRout(HTTPRequest r) 
 		{ 
 			foreach (var rout in RoutingTable) 
 			{
-				if (rout.ServerPath == name)
+				if (rout.ServerPath == r.Url)
 				{
-					return rout;
+					if (rout.OverrideCase == null)
+					{
+						return rout;
+					}
+					else if (!rout.OverrideCase(r))
+					{
+						return rout;
+					}
 				}
 			}
 			return Missing;
 		} 
 		public static HTTPResponse Respond(HTTPRequest request) 
 		{
-			Rout r = GetRout(request.Url);
+			Rout r = GetRout(request);
 			ContentType type = ContentType.text_plain;
 			string ext = r.LocalPath.Split('.').Last();
 			if (lookupTable.ContainsKey(ext)) {type = lookupTable[ext];}

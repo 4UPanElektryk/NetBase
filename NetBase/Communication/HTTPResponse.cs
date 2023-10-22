@@ -11,9 +11,13 @@ namespace NetBase.Communication
 		public HTTPCookies Cookies;
 		public Dictionary<string,string> Headers;
 		public string Body;
-		public HTTPResponse(StatusCode status, HTTPCookies cookies, string body = "", ContentType contenttype = ContentType.text_plain)
+		public HTTPResponse(StatusCode status, HTTPCookies cookies = null, string body = "", ContentType contenttype = ContentType.text_plain)
 		{
 			Status = status;
+			if (cookies == null)
+			{
+				cookies = new HTTPCookies();
+			}
 			Cookies = cookies;
 			Headers = new Dictionary<string, string>();
 			contentType = contenttype;
