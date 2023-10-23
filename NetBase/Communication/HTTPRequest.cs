@@ -31,7 +31,7 @@ namespace NetBase.Communication
 			};
 			if (path.Contains("?"))
 			{
-				request.Url = path.Split('?')[0];
+				request.Url = path.Split('?')[0].TrimStart('/');
 				if (path.Split('?')[1].Contains("&"))
 				{
 					foreach (var item in path.Split('?')[1].Split('&'))

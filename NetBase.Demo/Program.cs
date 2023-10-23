@@ -1,15 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 using NetBase.Communication;
 using NetBase.Templating;
 using NetBase.Templating.Components;
 using NetBase.FileProvider;
 using NetBase.StaticRouting;
-using System.ComponentModel;
 
 namespace NetBase.Demo
 {
@@ -18,11 +12,17 @@ namespace NetBase.Demo
 		static void Main(string[] args)
 		{
 			Server.router = Funcrouter;
-			Server.Start(IPAddress.Loopback,8080);
+			Server.Start(System.Net.IPAddress.Loopback,8080);
 			LocalFileLoader lo = new LocalFileLoader("Docs\\");
+			Router.Missing = new Rout()
+			{
+				loader = lo,
+				ServerPath = "404",
+				LocalPath = "index.html"
+			};
 			Router.Add(lo, "index.html", "",(r) => { return r.Cookies.Get("Logged") != null;});
 			Router.Add(lo, "login.html", "login");
-			Console.ReadLine();
+			Console.ReadKey(true);
 		}
 		public static HTTPResponse Funcrouter(HTTPRequest request)
 		{
@@ -41,7 +41,7 @@ namespace NetBase.Demo
 		}
 		public static HTTPResponse HandleGET(HTTPRequest request) 
 		{
-			if (request.Cookies.Get("Logged") == "true")
+            if (request.Cookies.Get("Logged") == "true")
 			{
 				HTTPResponse response = new HTTPResponse(
 					StatusCode.OK,
@@ -58,10 +58,13 @@ namespace NetBase.Demo
 		}
 		public static HTTPResponse HandlePOST(HTTPRequest request)
 		{
-            Console.WriteLine(request.body);
-            if (false)
+			if (request.body == "email=joe%40example.com&password=1234")
 			{
-				 
+				HTTPCookies cookies = new HTTPCookies();
+				cookies.Set("Logged", "true");
+				HTTPResponse response = new HTTPResponse(StatusCode.Moved_Permanently, cookies);
+				response.Headers.Add("Location","/index.html");
+                return response;
 			}
 			else 
 			{

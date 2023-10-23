@@ -37,20 +37,25 @@ namespace NetBase.StaticRouting
 		}
 		public static bool IsStatic(HTTPRequest r)
 		{
-			foreach (var rout in RoutingTable)
+            Console.WriteLine($"Checking Rout {r.Url}");
+			if (r.Method != HTTPMethod.GET) { return false; }
+            foreach (var rout in RoutingTable)
 			{
 				if (rout.ServerPath == r.Url)
 				{
 					if (rout.OverrideCase == null)
 					{
+						Console.WriteLine($"Static Rout {r.Url}");
 						return true;
 					}
 					else if (!rout.OverrideCase(r))
 					{
+						Console.WriteLine($"Ovveride case not met Rout {r.Url}");
 						return true;
 					}
 				}
 			}
+			Console.WriteLine($"Not Static Rout {r.Url}");
 			return false;
 		}
 		private static Rout GetRout(HTTPRequest r) 
@@ -59,14 +64,7 @@ namespace NetBase.StaticRouting
 			{
 				if (rout.ServerPath == r.Url)
 				{
-					if (rout.OverrideCase == null)
-					{
-						return rout;
-					}
-					else if (!rout.OverrideCase(r))
-					{
-						return rout;
-					}
+					return rout;
 				}
 			}
 			return Missing;
@@ -74,9 +72,9 @@ namespace NetBase.StaticRouting
 		public static HTTPResponse Respond(HTTPRequest request) 
 		{
 			Rout r = GetRout(request);
-			ContentType type = ContentType.text_plain;
+            ContentType type = ContentType.text_plain;
 			string ext = r.LocalPath.Split('.').Last();
-			if (lookupTable.ContainsKey(ext)) {type = lookupTable[ext];}
+            if (lookupTable.ContainsKey(ext)) {type = lookupTable[ext];}
 
 			return new HTTPResponse(StatusCode.OK,new HTTPCookies(), r.loader.Load(r.LocalPath), type);
 		}
