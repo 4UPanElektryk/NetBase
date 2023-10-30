@@ -12,7 +12,7 @@ namespace NetBase.Demo
 		static void Main(string[] args)
 		{
 			Server.router = Funcrouter;
-			Server.Start(System.Net.IPAddress.Loopback,8080);
+			Server.Start(System.Net.IPAddress.Loopback,80);
 			LocalFileLoader lo = new LocalFileLoader("Docs\\");
 			Router.Missing = new Rout()
 			{
@@ -36,12 +36,12 @@ namespace NetBase.Demo
 			}
 			else
 			{
-				return new HTTPResponse(StatusCode.Method_Not_Allowed, new HTTPCookies());
+				return new HTTPResponse(StatusCode.Method_Not_Allowed);
 			}
 		}
 		public static HTTPResponse HandleGET(HTTPRequest request) 
 		{
-            if (request.Cookies.Get("Logged") == "true")
+			if (request.Cookies.Get("Logged") == "true")
 			{
 				HTTPResponse response = new HTTPResponse(
 					StatusCode.OK,
@@ -64,7 +64,7 @@ namespace NetBase.Demo
 				cookies.Set("Logged", "true");
 				HTTPResponse response = new HTTPResponse(StatusCode.Moved_Permanently, cookies);
 				response.Headers.Add("Location","/index.html");
-                return response;
+				return response;
 			}
 			else 
 			{
