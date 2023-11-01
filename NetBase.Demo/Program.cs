@@ -58,12 +58,12 @@ namespace NetBase.Demo
 		}
 		public static HTTPResponse HandlePOST(HTTPRequest request)
 		{
-			if (request.body == "email=joe%40example.com&password=1234")
+            if (request.body == "email=joe%40example.com&password=1234")
 			{
-				HTTPCookies cookies = new HTTPCookies();
+                HTTPCookies cookies = new HTTPCookies();
 				cookies.Set("Logged", "true");
 				HTTPResponse response = new HTTPResponse(StatusCode.Moved_Permanently, cookies);
-				response.Headers.Add("Location","/index.html");
+				response.Headers.Add("Location","/");
 				return response;
 			}
 			else 
