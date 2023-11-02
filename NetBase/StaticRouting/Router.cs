@@ -37,25 +37,25 @@ namespace NetBase.StaticRouting
 		}
 		public static bool IsStatic(HTTPRequest r)
 		{
-            Console.WriteLine($"Checking Rout {r.Url}");
-			if (r.Method != HTTPMethod.GET) { return false; }
+            Console.WriteLine($"Checking Rout ({r.Url})");
+			if (r.Method != HTTPMethod.GET) { Console.WriteLine($"Routing not met for using diffrent method ({r.Method})"); return false; }
             foreach (var rout in RoutingTable)
 			{
 				if (rout.ServerPath == r.Url)
 				{
 					if (rout.OverrideCase == null)
 					{
-						Console.WriteLine($"Static Rout {r.Url}");
+						Console.WriteLine($"Static Rout found ({r.Url})");
 						return true;
 					}
 					else if (!rout.OverrideCase(r))
 					{
-						Console.WriteLine($"Ovveride case not met Rout {r.Url}");
+						Console.WriteLine($"Override case not met Rout ({r.Url})");
 						return true;
 					}
 				}
 			}
-			Console.WriteLine($"Not Static Rout {r.Url}");
+			Console.WriteLine($"Not Static Rout ({r.Url})");
 			return false;
 		}
 		private static Rout GetRout(HTTPRequest r) 
