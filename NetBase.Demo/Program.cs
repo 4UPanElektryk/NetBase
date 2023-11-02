@@ -41,6 +41,7 @@ namespace NetBase.Demo
 		}
 		public static HTTPResponse HandleGET(HTTPRequest request) 
 		{
+			Console.WriteLine($"GET{request.Url}");
 			if (request.Cookies.Get("Logged") == "true")
 			{
 				HTTPResponse response = new HTTPResponse(
