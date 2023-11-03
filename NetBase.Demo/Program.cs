@@ -4,6 +4,7 @@ using NetBase.Templating;
 using NetBase.Templating.Components;
 using NetBase.FileProvider;
 using NetBase.StaticRouting;
+using System.Runtime.InteropServices;
 
 namespace NetBase.Demo
 {
@@ -12,7 +13,7 @@ namespace NetBase.Demo
 		static void Main(string[] args)
 		{
 			Server.router = Funcrouter;
-			Server.Start(System.Net.IPAddress.Loopback,80);
+			Server.Start(System.Net.IPAddress.Parse("172.27.16.1"),80);
 			LocalFileLoader lo = new LocalFileLoader("Docs\\");
 			Router.Missing = new Rout()
 			{
@@ -26,22 +27,21 @@ namespace NetBase.Demo
 		}
 		public static HTTPResponse Funcrouter(HTTPRequest request)
 		{
+			HTTPResponse res = new HTTPResponse(StatusCode.Method_Not_Allowed);
 			if (request.Method == HTTPMethod.GET)
 			{
-				return HandleGET(request);
+				res = HandleGET(request);
 			}
 			else if (request.Method == HTTPMethod.POST)
 			{
-				return HandlePOST(request);
+				res = HandlePOST(request);
 			}
-			else
-			{
-				return new HTTPResponse(StatusCode.Method_Not_Allowed);
-			}
+            Console.WriteLine(res.ToString());
+            return res;
 		}
 		public static HTTPResponse HandleGET(HTTPRequest request) 
 		{
-			Console.WriteLine($"GET{request.Url}");
+			Console.WriteLine($"GET ({request.Url})");
 			if (request.Cookies.Get("Logged") == "true")
 			{
 				HTTPResponse response = new HTTPResponse(
@@ -64,7 +64,8 @@ namespace NetBase.Demo
                 HTTPCookies cookies = new HTTPCookies();
 				cookies.Set("Logged", "true");
 				HTTPResponse response = new HTTPResponse(StatusCode.Moved_Permanently, cookies);
-				response.Headers.Add("Location","/");
+				response.Headers.Add("Location", "http://www.example.org/");
+				response.Body = $"<html><head><title>Test</title></head><body><h1>You're Logged</h1></body></html>";
 				return response;
 			}
 			else 

@@ -28,19 +28,26 @@ namespace NetBase.Communication
 		{
 			string ReasonPhrase = Enum.GetName(typeof(StatusCode), (int)Status).Replace("_", " ");
 			string contType = Enum.GetName(typeof(ContentType), (int)contentType).Replace("_", "/");
-			if (Body != "")
+            Console.WriteLine(contType);
+            if (Body != "")
 			{
-				Headers.Add("Content-Type", contType + "; charset=utf-8");
+				if (contType.Contains("text"))
+				{
+					Headers.Add("Content-Type", contType + "; charset=utf-8");
+				}
+				else
+				{
+					Headers.Add("Content-Type", contType + "");
+				}
 				Headers.Add("Content-Length", Encoding.UTF8.GetByteCount(Body).ToString());
 			}
-			string Response =
-				$"HTTP/1.1 {(int)Status} {ReasonPhrase}\r\n" +
-				$"Cache-Control: no-cache\r\n";
+			Headers.Add("Cache-Control", "no-cache");
+			string Response = $"HTTP/1.1 {(int)Status} {ReasonPhrase}\r\n";
+			foreach (var item in Headers){Response += $"{item.Key}: {item.Value}\r\n";}
 			if (Cookies.ExportCookies().Length != 0)
 			{
 				foreach (var item in Cookies.ExportCookies()){Response += $"Set-Cookie: {item}\r\n";}
 			}
-			foreach (var item in Headers){Response += $"{item.Key}: {item.Value}\r\n";}
 
 			if (Body != ""){Response += $"\r\n{Body}";}
 			return Response;
