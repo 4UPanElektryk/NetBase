@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-
 namespace NetBase.Communication
 {
 	public class HTTPRequest
@@ -69,7 +67,10 @@ namespace NetBase.Communication
 					);
 				}
 			}
-			request.body = lines.Last();
+			if (request.Headers.ContainsKey("Content-Length"))
+			{
+				request.body = data.Substring(data.Length - int.Parse(request.Headers["Content-Length"]), int.Parse(request.Headers["Content-Length"]));
+			}
 			return request;
 		}
 	}
