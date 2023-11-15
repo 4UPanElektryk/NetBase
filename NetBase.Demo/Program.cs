@@ -21,13 +21,16 @@ namespace NetBase.Demo
 				ServerPath = "404",
 				LocalPath = "index.html"
 			};
-			Router.Add(lo, "index.html", "",(r) => { return r.Cookies.Get("Logged") != null;});
+			Router.Add(lo, "index.html", "", (r) => { return r.Cookies.Get("Logged") != null; });
+			Router.Add(lo, "index.html", "", (r) => { return r.Cookies.Get("Logged") == "true"; });
 			Router.Add(lo, "login.html", "login");
 			Console.ReadKey(true);
 		}
 		public static HTTPResponse Funcrouter(HTTPRequest request)
 		{
 			HTTPResponse res = new HTTPResponse(StatusCode.Method_Not_Allowed);
+			string ReasonPhrase = Enum.GetName(typeof(HTTPMethod), (int)request.Method);
+			Console.WriteLine($"{ReasonPhrase} ({request.Url})");
 			if (request.Method == HTTPMethod.GET)
 			{
 				res = HandleGET(request);
@@ -36,13 +39,12 @@ namespace NetBase.Demo
 			{
 				res = HandlePOST(request);
 			}
-            Console.WriteLine(res.ToString());
+			//Console.WriteLine(res.ToString());
             return res;
 		}
 		public static HTTPResponse HandleGET(HTTPRequest request) 
 		{
-			Console.WriteLine($"GET ({request.Url})");
-			if (request.Cookies.Get("Logged") == "true")
+			if (request.Url == "" && request.Cookies.Get("Logged") == "true")
 			{
 				HTTPResponse response = new HTTPResponse(
 					StatusCode.OK,
@@ -52,13 +54,12 @@ namespace NetBase.Demo
 				);
 				return response;
 			}
-			else if (request.Url == "example") 
+			else if (request.Url == "logout") 
 			{
 				HTTPCookies cookies = new HTTPCookies();
-				cookies.Set("Logged", "true");
-				string Body = $"<html><head><title>Test</title></head><body><h1>You're Logged</h1></body></html>\r\n";
-				HTTPResponse response = new HTTPResponse(StatusCode.Moved_Permanently, cookies, Body, ContentType.text_html);
-				response.Headers.Add("Location", "http://www.example.org/");
+				cookies.Set("Logged", "false");
+				HTTPResponse response = new HTTPResponse(StatusCode.Moved_Permanently, cookies);
+				response.Headers.Add("Location", "/");
 				return response;
 			}
 			else
@@ -73,8 +74,8 @@ namespace NetBase.Demo
                 HTTPCookies cookies = new HTTPCookies();
 				cookies.Set("Logged", "true");
 				string Body = $"<html><head><title>Test</title></head><body><h1>You're Logged</h1></body></html>";
-				HTTPResponse response = new HTTPResponse(StatusCode.OK, cookies,Body,ContentType.text_html);
-				//response.Headers.Add("Location", "http://www.example.org/");
+				HTTPResponse response = new HTTPResponse(StatusCode.Moved_Permanently, cookies,Body,ContentType.text_html);
+				response.Headers.Add("Location", "/");
 				return response;
 			}
 			else 
