@@ -26,30 +26,26 @@ namespace NetBase.Communication
 
 		public override string ToString()
 		{
+			Dictionary<string,string> respheaders = Headers;
 			string ReasonPhrase = Enum.GetName(typeof(StatusCode), (int)Status).Replace("_", " ");
 			string contType = Enum.GetName(typeof(ContentType), (int)contentType).Replace("_", "/");
-            Console.WriteLine(contType);
-            if (Body != "")
+            if (contType.Contains("text"))
 			{
-				if (contType.Contains("text"))
-				{
-					Headers.Add("Content-Type", contType + "; charset=utf-8");
-				}
-				else
-				{
-					Headers.Add("Content-Type", contType + "");
-				}
-				Headers.Add("Content-Length", Encoding.UTF8.GetByteCount(Body).ToString());
+				respheaders.Add("Content-Type", $"{contType}; charset=UTF-8");
 			}
-			Headers.Add("Cache-Control", "no-cache");
+			else
+			{
+				respheaders.Add("Content-Type", contType);
+			}
+			respheaders.Add("Cache-Control", "no-cache");
+			respheaders.Add("Content-Length", Encoding.UTF8.GetByteCount(Body).ToString());
 			string Response = $"HTTP/1.1 {(int)Status} {ReasonPhrase}\r\n";
-			foreach (var item in Headers){Response += $"{item.Key}: {item.Value}\r\n";}
+			foreach (var item in respheaders) {Response += $"{item.Key}: {item.Value}\r\n";}
 			if (Cookies.ExportCookies().Length != 0)
 			{
 				foreach (var item in Cookies.ExportCookies()){Response += $"Set-Cookie: {item}\r\n";}
 			}
-
-			if (Body != ""){Response += $"\r\n{Body}";}
+			Response += $"\r\n{Body}\r\n";
 			return Response;
 		}
 	}
