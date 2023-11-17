@@ -1,10 +1,11 @@
 ﻿using System;
 using NetBase.Communication;
 using NetBase.Templating;
+using NetBase.Templating.Templates;
 using NetBase.Templating.Components;
 using NetBase.FileProvider;
 using NetBase.StaticRouting;
-using System.Runtime.InteropServices;
+using System.Collections.Generic;
 
 namespace NetBase.Demo
 {
@@ -14,7 +15,9 @@ namespace NetBase.Demo
 		{
 			Server.router = Funcrouter;
 			Server.Start(System.Net.IPAddress.Loopback,80);
-			LocalFileLoader lo = new LocalFileLoader("Docs\\");
+			IFileLoader lo = /*new SingularFSFileLoader("docs.fs_");*/ new LocalFileLoader("Docs\\");
+			new TemplateManager(lo);
+			
 			Router.Missing = new Rout()
 			{
 				loader = lo,
@@ -39,17 +42,18 @@ namespace NetBase.Demo
 			{
 				res = HandlePOST(request);
 			}
-			//Console.WriteLine(res.ToString());
             return res;
 		}
 		public static HTTPResponse HandleGET(HTTPRequest request) 
 		{
 			if (request.Url == "" && request.Cookies.Get("Logged") == "true")
 			{
-				HTTPResponse response = new HTTPResponse(
+				DataProvider dp = new DataProvider();
+                dp.Data.Add(new Dictionary<string, string>(){{ "name","somebody" }});
+                HTTPResponse response = new HTTPResponse(
 					StatusCode.OK,
 					new HTTPCookies(),
-					$"<html><head><title>Test</title></head><body><h1>You're Logged</h1></body></html>",
+					TemplateManager.GetComponet("index.t.html").Use(null,dp),
 					ContentType.text_html
 				);
 				return response;
@@ -73,8 +77,7 @@ namespace NetBase.Demo
 			{
                 HTTPCookies cookies = new HTTPCookies();
 				cookies.Set("Logged", "true");
-				string Body = $"<html><head><title>Test</title></head><body><h1>You're Logged</h1></body></html>";
-				HTTPResponse response = new HTTPResponse(StatusCode.Moved_Permanently, cookies,Body,ContentType.text_html);
+				HTTPResponse response = new HTTPResponse(StatusCode.Moved_Permanently, cookies);
 				response.Headers.Add("Location", "/");
 				return response;
 			}

@@ -20,16 +20,19 @@ namespace NetBase.Templating.Templates
 		// Component would be with {$name$}
 		public string Use(ReadOnlyDictionary<string,DataProvider> elements = null, DataProvider provider = null)
 		{
-			Regex re = new Regex(@"\{\$(\w+)\$\}", RegexOptions.Compiled);
+			Regex components = new Regex(@"\{\$(\w+)\$\}", RegexOptions.Compiled);
+			Regex data = new Regex(@"\$(\w+)\$", RegexOptions.Compiled);
 			string ret = "";
-			foreach (var item in elements)
+			if (elements != null)
 			{
-				ret += re.Replace(component, match => TComponentManager.GetComponet(item.Key).Use(item.Value));
+				foreach (var item in elements)
+				{
+					ret += components.Replace(component, match => TComponentManager.GetComponet(item.Key).Use(item.Value));
+				}
 			}
-			Regex reg = new Regex(@"\$(\w+)\$", RegexOptions.Compiled);
-			provider.ForEach(r => {
-				ret += reg.Replace(component, match => r.ContainsKey(match.Groups[1].Value) ? r[match.Groups[1].Value] : $"<!-- ?missing \"{match.Groups[1].Value}\" -->");
-			});
+			provider?.ForEach(r => {
+					ret += data.Replace(component, match => r.ContainsKey(match.Groups[1].Value) ? r[match.Groups[1].Value] : $"<!-- ?missing \"{match.Groups[1].Value}\" -->");
+				});
 			return ret;
 		}
 	}
