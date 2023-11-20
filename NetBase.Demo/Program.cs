@@ -17,13 +17,6 @@ namespace NetBase.Demo
 			Server.Start(System.Net.IPAddress.Loopback,80);
 			IFileLoader lo = /*new SingularFSFileLoader("docs.fs_");*/ new LocalFileLoader("Docs\\");
 			new TemplateManager(lo);
-			
-			Router.Missing = new Rout()
-			{
-				loader = lo,
-				ServerPath = "404",
-				LocalPath = "index.html"
-			};
 			Router.Add(lo, "index.html", "", (r) => { return r.Cookies.Get("Logged") != null; });
 			Router.Add(lo, "index.html", "", (r) => { return r.Cookies.Get("Logged") == "true"; });
 			Router.Add(lo, "login.html", "login");

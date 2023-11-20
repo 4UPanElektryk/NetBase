@@ -1,7 +1,9 @@
 ﻿using NetBase.Communication;
 using NetBase.FileProvider;
+using NetBase.RuntimeLogger;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,7 +24,6 @@ namespace NetBase.StaticRouting
 
 		};
 		public static List<Rout> RoutingTable = new List<Rout>();
-		public static Rout Missing = new Rout();
 		public static void Add(IFileLoader loader, string LocalPath, string Url, Func<HTTPRequest, bool> Overrdide = null)
 		{
 			if (loader == null)
@@ -67,7 +68,7 @@ namespace NetBase.StaticRouting
 					return rout;
 				}
 			}
-			return Missing;
+			throw new NotImplementedException("This should be imposible becouse this already checks if file is routed via this");
 		} 
 		public static HTTPResponse Respond(HTTPRequest request) 
 		{
@@ -75,8 +76,24 @@ namespace NetBase.StaticRouting
             ContentType type = ContentType.text_plain;
 			string ext = r.LocalPath.Split('.').Last();
             if (lookupTable.ContainsKey(ext)) {type = lookupTable[ext];}
-
-			return new HTTPResponse(StatusCode.OK,new HTTPCookies(), r.loader.Load(r.LocalPath), type);
+			try
+			{
+				return new HTTPResponse(StatusCode.OK, null, r.loader.Load(r.LocalPath), type);
+			}
+			catch (Exception ex)
+			{
+				Log.Incident(ex);
+				if(ex is FileNotFoundException)
+				{
+					return new HTTPResponse(StatusCode.Not_Found, null, 
+						$"<html><head><title>File was not found</title></head>" +
+						$"<body><h1>File was not found by Router</h1>" +
+						$"<p>Local File: \"{r.LocalPath}\"</p>" +
+						$"<hr><center><a href=\\\"https://github.com/4UPanElektryk/NetBase\\\">NetBase</a></center>" +
+						$"</body></html>");
+				}
+				throw ex;
+			}
 		}
 	}
 }

@@ -46,39 +46,52 @@ namespace NetBase
 			if (StaticRouting.Router.IsStatic(r)) 
 			{
 				response = StaticRouting.Router.Respond(r);
-				e.ReplyLine(response.ToString());
-				return;
 			}
-			try
+			else
 			{
-				response = router.Invoke(r);
+				try
+				{
+					response = router.Invoke(r);
+				}
+				catch (Exception ex)
+				{
+					response = new HTTPResponse(
+						StatusCode.Internal_Server_Error,
+						new HTTPCookies(),
+						$"<html><head>" +
+						$"<title>500 Internal Server Error</title>" +
+						$"</head><body>" +
+						$"<h1>500 Internal Server Error</h1>" +
+						$"<h2>{ex.Message}</h2>" +
+						$"<p>Server Encountered an exception while trying to complete the reques</p>" +
+						$"<p>{ex.StackTrace}</p>" +
+						$"<hr> <a href=\"https://github.com/4UPanElektryk/NetBase\">NetBase</a>" +
+						$"</body></html>",
+						ContentType.text_html
+					);
+					Log.Incident(ex);
+				}
+				if (response.Body == "" && (int)response.Status >= 400)
+				{
+					string ReasonPhrase = Enum.GetName(typeof(StatusCode), (int)response.Status).Replace("_", " ");
+					response.Body =
+						$"<html><head>" +
+						$"<title>{(int)response.Status} {ReasonPhrase}</title>" +
+						$"</head><body>" +
+						$"<center><h1>{(int)response.Status} {ReasonPhrase}</h1></center>" +
+						$"<hr><center><a href=\"https://github.com/4UPanElektryk/NetBase\">NetBase</a></center>" +
+						$"</body></html>";
+					response.contentType = ContentType.text_html;
+				}
 			}
-			catch (Exception ex)
-			{
-				response = new HTTPResponse(
-					StatusCode.Internal_Server_Error,
-					new HTTPCookies(),
-					$"<html><head>" +
-					$"<title>500 Internal Server Error</title>" +
-					$"</head><body>" +
-					$"<h1>500 Internal Server Error</h1>" +
-					$"<h2>{ex.Message}</h2>" +
-					$"<p>Server Encountered an exception while trying to complete the reques</p>" +
-					$"<p>{ex.StackTrace}</p>" +
-					$"<hr> <a href=\"https://github.com/4UPanElektryk/NetBase\">NetBase</a>" +
-					$"</body></html>",
-					ContentType.text_html
-				);
-				Log.Incident(ex);
-			}
-			if (response.Body == "" && (int)response.Status >= 400)
+			if (response.Body == "" && response.Status == StatusCode.Not_Found)
 			{
 				string ReasonPhrase = Enum.GetName(typeof(StatusCode), (int)response.Status).Replace("_", " ");
 				response.Body =
 					$"<html><head>" +
 					$"<title>{(int)response.Status} {ReasonPhrase}</title>" +
 					$"</head><body>" +
-					$"<center><h1>{(int)response.Status} {ReasonPhrase}</h1></center>" +
+					$"<center><h1>{(int)response.Status} {ReasonPhrase}</h1><p>The requested url was not located on this server \"{r.Url}\"</p></center>" +
 					$"<hr><center><a href=\"https://github.com/4UPanElektryk/NetBase\">NetBase</a></center>" +
 					$"</body></html>";
 				response.contentType = ContentType.text_html;
