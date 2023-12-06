@@ -17,6 +17,7 @@ namespace NetBase.Communication
 		{
 			URLParamenters = new Dictionary<string, string>();
 			Headers = new Dictionary<string, string>();
+			PostData = new Dictionary<string, string>();
 			Cookies = new HTTPCookies();
 		}
 		public static HTTPRequest Parse(string data)

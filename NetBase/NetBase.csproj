@@ -38,7 +38,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="SimpleTCP, Version=1.0.24.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SimpleTCP.1.0.24\lib\net45\SimpleTCP.dll</HintPath>
+      <HintPath>..\..\..\Xillo-Software\Gliv\packages\SimpleTCP.1.0.24\lib\net45\SimpleTCP.dll</HintPath>
     </Reference>
     <Reference Include="SingularFS">
       <HintPath>.\SingularFS.dll</HintPath>
