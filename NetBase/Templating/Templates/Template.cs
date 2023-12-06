@@ -31,7 +31,7 @@ namespace NetBase.Templating.Templates
 			}
 			if (provider != null)
 			{
-					ret = data.Replace(ret, match => provider.ContainsKey(match.Groups[1].Value) ? provider[match.Groups[1].Value] : $"<!-- ?missing \"{match.Groups[1].Value}\" -->");
+				ret = data.Replace(ret, match => provider.ContainsKey(match.Groups[1].Value) ? provider[match.Groups[1].Value] : $"<!-- ?missing \"{match.Groups[1].Value}\" -->");
 			}
 			return ret;
 		}

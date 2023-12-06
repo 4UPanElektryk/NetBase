@@ -24,10 +24,12 @@ namespace NetBase.StaticRouting
 
 		};
 		public static List<Rout> RoutingTable = new List<Rout>();
-		public static void Add(IFileLoader loader, string LocalPath, string Url, Func<HTTPRequest, bool> Overrdide = null)
+		public static void Add(IFileLoader loader, string LocalPath, string Url = null, Func<HTTPRequest, bool> Overrdide = null)
 		{
 			if (loader == null)
 				throw new ArgumentNullException(nameof(loader));
+			if (Url == null)
+				Url = LocalPath;
 			RoutingTable.Add(new Rout()
 			{
 				loader = loader,
