@@ -79,7 +79,7 @@ namespace NetBase.Communication
 				{
 					request.PostData.Add(
 						item.Split('=')[0],
-						item.Split('=')[1]
+						Uri.UnescapeDataString(item.Substring(item.Split('=')[0].Length + 1).Replace('+',' '))
 					);
 				}
 			}
