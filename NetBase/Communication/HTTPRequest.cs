@@ -10,6 +10,7 @@ namespace NetBase.Communication
 		public string HTTPVersion;
 		public HTTPMethod Method;
 		public Dictionary<string,string> Headers;
+		public Dictionary<string,string> PostData;
 		public HTTPCookies Cookies;
 		public string body;
 		public HTTPRequest()
@@ -35,8 +36,8 @@ namespace NetBase.Communication
 					foreach (var item in path.Split('?')[1].Split('&'))
 					{
 						request.URLParamenters.Add(
-							item.Split('=')[0], 
-							item.Split('=')[1]
+							item.Split('=')[0],
+							Uri.UnescapeDataString(item.Split('=')[1])
 						);
 					}
 				}
@@ -45,7 +46,7 @@ namespace NetBase.Communication
 					string item = path.Split('?')[1];
 					request.URLParamenters.Add(
 						item.Split('=')[0],
-						item.Split('=')[1]
+						Uri.UnescapeDataString(item.Split('=')[1])
 					);
 				}
 			}
@@ -70,6 +71,16 @@ namespace NetBase.Communication
 			if (request.Headers.ContainsKey("Content-Length"))
 			{
 				request.body = data.Substring(data.Length - int.Parse(request.Headers["Content-Length"]), int.Parse(request.Headers["Content-Length"]));
+			}
+			if (request.Method == HTTPMethod.POST)
+			{
+				foreach (var item in request.body.Split(';'))
+				{
+					request.PostData.Add(
+						item.Split('=')[0],
+						item.Split('=')[1]
+					);
+				}
 			}
 			return request;
 		}
