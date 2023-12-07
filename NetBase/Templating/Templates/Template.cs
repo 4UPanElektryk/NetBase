@@ -41,7 +41,14 @@ namespace NetBase.Templating.Templates
 			Console.WriteLine(nmatch);
             if (TComponentManager.GetComponet(nmatch) != null)
 			{
-				return TComponentManager.GetComponet(nmatch).Use(elements[nmatch]);
+				if (elements.ContainsKey(nmatch))
+				{
+					return TComponentManager.GetComponet(nmatch).Use(elements[nmatch]);
+				}
+				else
+				{
+					return TComponentManager.GetComponet(nmatch).Use(null);
+				}
 			}
 			else
 			{
