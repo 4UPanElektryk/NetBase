@@ -21,13 +21,13 @@ namespace NetBase.Templating.Templates
 		// Component would be with {$name$}
 		public string Use(ReadOnlyDictionary<string,DataProvider> elements = null, Dictionary<string, string> provider = null)
 		{
-			Regex components = new Regex(@"\{\$(\w+).(\w+)\$\}", RegexOptions.Compiled);
+			Regex components = new Regex(@"\{\$(\w+.\w+)\$\}", RegexOptions.Compiled);
 			Regex data = new Regex(@"\$(\w+)\$", RegexOptions.Compiled);
 			string ret = "";
 			if (elements != null)
 			{
-                Console.WriteLine(components.Replace(component, match => test(match, elements)));
-                ret += components.Replace(component, match => test(match, elements));
+                Console.WriteLine(components.Replace(component, match => Test(match, elements)));
+                ret += components.Replace(component, match => Test(match, elements));
 			}
 			if (provider != null)
 			{
@@ -35,10 +35,9 @@ namespace NetBase.Templating.Templates
 			}
 			return ret;
 		}
-		private string test(Match match, ReadOnlyDictionary<string, DataProvider> elements)
+		private string Test(Match match, ReadOnlyDictionary<string, DataProvider> elements)
 		{
-			string nmatch = match.Groups[1].Value + "." + match.Groups[2].Value;
-			Console.WriteLine(nmatch);
+			string nmatch = match.Groups[1].Value;
             if (TComponentManager.GetComponet(nmatch) != null)
 			{
 				if (elements.ContainsKey(nmatch))

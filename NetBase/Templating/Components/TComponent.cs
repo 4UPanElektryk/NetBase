@@ -18,6 +18,10 @@ namespace NetBase.Templating.Components
 			provider?.ForEach(r => { 
 					ret += re.Replace(component, match => r.ContainsKey(match.Groups[1].Value) ? r[match.Groups[1].Value] : $"<!-- ?missing \"{match.Groups[1].Value}\" -->"); 
 				});
+			if (provider == null) 
+			{ 
+				return re.Replace(component, match => "");
+			}
 			return ret;
 		}
 	}
