@@ -3,6 +3,7 @@ using NetBase.FileProvider;
 using NetBase.RuntimeLogger;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -40,25 +41,25 @@ namespace NetBase.StaticRouting
 		}
 		public static bool IsStatic(HTTPRequest r)
 		{
-            Console.WriteLine($"Checking Rout ({r.Url})");
-			if (r.Method != HTTPMethod.GET) { Console.WriteLine($"Routing not met for using diffrent method ({r.Method})"); return false; }
+            Debug.WriteLine($"Checking Rout ({r.Url})");
+			if (r.Method != HTTPMethod.GET) { Debug.WriteLine($"Routing not met for using diffrent method ({r.Method})"); return false; }
             foreach (var rout in RoutingTable)
 			{
 				if (rout.ServerPath == r.Url)
 				{
 					if (rout.OverrideCase == null)
 					{
-						Console.WriteLine($"Static Rout found ({r.Url})");
+						Debug.WriteLine($"Static Rout found ({r.Url})");
 						return true;
 					}
 					else if (!rout.OverrideCase(r))
 					{
-						Console.WriteLine($"Override case not met Rout ({r.Url})");
+						Debug.WriteLine($"Override case not met Rout ({r.Url})");
 						return true;
 					}
 				}
 			}
-			Console.WriteLine($"Not Static Rout ({r.Url})");
+			Debug.WriteLine($"Not Static Rout ({r.Url})");
 			return false;
 		}
 		private static Rout GetRout(HTTPRequest r) 
@@ -92,7 +93,7 @@ namespace NetBase.StaticRouting
 						$"<body><h1>File was not found by Router</h1>" +
 						$"<p>Local File: \"{r.LocalPath}\"</p>" +
 						$"<hr><center><a href=\\\"https://github.com/4UPanElektryk/NetBase\\\">NetBase</a></center>" +
-						$"</body></html>");
+						$"</body></html>", ContentType.text_html);
 				}
 				throw ex;
 			}
