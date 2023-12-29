@@ -6,6 +6,7 @@ using NetBase.Templating.Components;
 using NetBase.FileProvider;
 using NetBase.StaticRouting;
 using System.Collections.Generic;
+using System.Collections;
 
 namespace NetBase.Demo
 {
@@ -41,8 +42,7 @@ namespace NetBase.Demo
 		{
 			if (request.Url == "" && request.Cookies.Get("Logged") == "true")
 			{
-				DataProvider dp = new DataProvider();
-                dp.Data.Add(new Dictionary<string, string>(){{ "name","somebody" }});
+				Dictionary<string, string> dp = new Dictionary<string, string>() { { "name", "somebody" } };
                 HTTPResponse response = new HTTPResponse(
 					StatusCode.OK,
 					new HTTPCookies(),

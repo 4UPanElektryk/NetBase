@@ -41,22 +41,31 @@ namespace NetBase.StaticRouting
 		}
 		public static bool IsStatic(HTTPRequest r)
 		{
-            Debug.WriteLine($"Checking Rout ({r.Url})");
-			if (r.Method != HTTPMethod.GET) { Debug.WriteLine($"Routing not met for using diffrent method ({r.Method})"); return false; }
+#if DEBUG
+			Debug.WriteLine($"Checking Rout ({r.Url})");
+#endif
+			if (r.Method != HTTPMethod.GET) {
+#if DEBUG
+				Debug.WriteLine($"Routing not met for using diffrent method ({r.Method})"); 
+#endif
+				return false; 
+			}
             foreach (var rout in RoutingTable)
 			{
-				if (rout.ServerPath == r.Url)
+				if (rout.ServerPath != r.Url) { continue; }
+				if (rout.OverrideCase == null)
 				{
-					if (rout.OverrideCase == null)
-					{
-						Debug.WriteLine($"Static Rout found ({r.Url})");
-						return true;
-					}
-					else if (!rout.OverrideCase(r))
-					{
-						Debug.WriteLine($"Override case not met Rout ({r.Url})");
-						return true;
-					}
+#if DEBUG
+					Debug.WriteLine($"Static Rout found ({r.Url})");
+#endif
+					return true;
+				}
+				else if (!rout.OverrideCase(r))
+				{
+#if DEBUG
+					Debug.WriteLine($"Override case not met Rout ({r.Url})");
+#endif
+					return true;
 				}
 			}
 			Debug.WriteLine($"Not Static Rout ({r.Url})");
