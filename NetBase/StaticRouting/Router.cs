@@ -25,6 +25,35 @@ namespace NetBase.StaticRouting
 
 		};
 		public static List<Rout> RoutingTable = new List<Rout>();
+		private static Dictionary<string, string> ParseData(string[] data)
+		{
+			string prev = "";
+			Dictionary<string, string> d = new Dictionary<string, string>();
+			foreach (string lline in data)
+			{
+				string line = lline.Split('#')[0];
+				if (line.StartsWith("["))
+				{
+					prev = line.TrimEnd(']');
+				}
+				else if (line.Contains("="))
+				{
+					string[] parts = line.Split('=');
+					string name = prev == "" ? parts[0] : prev + '/' + parts[0];
+					string val = line.Substring(prev == "" ? name.Length + 1 : parts[0].Length + 1);
+					val = val.Split('\"')[1];
+					d.Add(name, val);
+				}
+			}
+			return d;
+		}
+		public static void InitFromINI(IFileLoader loader, string path = "Router.ini")
+		{
+			foreach (var item in ParseData(loader.Load(path).Split('\n')))
+			{
+				Add(loader, item.Key, item.Value);
+			}
+		}
 		public static void Add(IFileLoader loader, string LocalPath, string Url = null, Func<HTTPRequest, bool> Overrdide = null)
 		{
 			if (loader == null)
