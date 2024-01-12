@@ -75,7 +75,7 @@ namespace NetBase.Communication
 			}
 			if (request.Method == HTTPMethod.POST)
 			{
-				foreach (var item in request.body.Split(';'))
+				foreach (var item in request.body.Split('&'))
 				{
 					request.PostData.Add(
 						item.Split('=')[0],
