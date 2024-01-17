@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace NetBase.StaticRouting
@@ -25,33 +26,45 @@ namespace NetBase.StaticRouting
 
 		};
 		public static List<Rout> RoutingTable = new List<Rout>();
-		private static Dictionary<string, string> ParseData(string[] data)
+		private static Dictionary<string, string> ParseData(string data)
 		{
-			string prev = "";
 			Dictionary<string, string> d = new Dictionary<string, string>();
-			foreach (string lline in data)
+			//! Idon't know why It Works but it works
+			Regex sections = new Regex(@"\[([\w\.]+)\]([\n|a-zA-Z0-9\/\=\t\.\s]*)", RegexOptions.Multiline);
+			Regex rest = new Regex(@"(\w+)\s*=\s*\n?((?:\t?.+\n?)+)", RegexOptions.Multiline);
+			MatchCollection sectionsCollection = sections.Matches(data);
+			if (sectionsCollection.Count == 0)
 			{
-				string line = lline.Split('#')[0];
-				if (line.StartsWith("["))
+				MatchCollection restCollection = rest.Matches(data);
+				foreach (Match item in restCollection)
 				{
-					prev = line.TrimEnd(']');
-				}
-				else if (line.Contains("="))
-				{
-					string[] parts = line.Split('=');
-					string name = prev == "" ? parts[0] : prev + '/' + parts[0];
-					string val = line.Substring(prev == "" ? name.Length + 1 : parts[0].Length + 1);
-					val = val.Split('\"')[1];
-					d.Add(name, val);
+					d.Add($"{item.Groups[1].Value}", item.Groups[2].Value);
 				}
 			}
+			foreach (Match item in sectionsCollection)
+			{
+				string local = item.Groups[1].Value;
+				MatchCollection restCollection = rest.Matches(item.Groups[2].Value);
+				foreach (Match item2 in restCollection)
+				{
+					d.Add($"{local}.{item2.Groups[1].Value}", item2.Groups[2].Value);
+				}
+            }
 			return d;
 		}
 		public static void InitFromINI(IFileLoader loader, string path = "Router.ini")
 		{
-			foreach (var item in ParseData(loader.Load(path).Split('\n')))
+			Dictionary<string, string> data = ParseData(loader.Load(path));
+			string prefix = "";
+			if (data.ContainsKey("prefix"))
 			{
-                Add(loader, item.Value, item.Key);
+				prefix = data["prefix"];
+			}
+
+            foreach (var item in data["defaultRoutes"].Split('\n'))
+			{
+				string pitem = item.Trim("\t\r".ToCharArray());
+				Add(loader, prefix + pitem, pitem);
 			}
 		}
 		public static void Add(IFileLoader loader, string LocalPath, string Url = null, Func<HTTPRequest, bool> Overrdide = null)

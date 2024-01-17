@@ -10,16 +10,16 @@ using System.Threading.Tasks;
 
 namespace NetBase.Templating.Templates
 {
-	public class Template
+	public class Document
 	{
 		public string component;
 		public readonly string AssetName;
-		public Template(string name)
+		public Document(string name)
 		{
 			AssetName = name;
 		}
 		// Component would be with {$name$}
-		public string Use(ReadOnlyDictionary<string,DataProvider> elements = null, Dictionary<string, string> provider = null)
+		public string Use(Dictionary<string,DataProvider> elements = null, Dictionary<string, string> provider = null)
 		{
 			Regex components = new Regex(@"\{\$(\w+.\w+)\$\}", RegexOptions.Compiled);
 			Regex data = new Regex(@"\$(\w+)\$", RegexOptions.Compiled);
@@ -35,7 +35,7 @@ namespace NetBase.Templating.Templates
 			}
 			return ret;
 		}
-		private string Test(Match match, ReadOnlyDictionary<string, DataProvider> elements)
+		private string Test(Match match, Dictionary<string, DataProvider> elements)
 		{
 			string nmatch = match.Groups[1].Value;
             if (TComponentManager.GetComponet(nmatch) != null)

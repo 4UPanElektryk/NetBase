@@ -17,7 +17,7 @@ namespace NetBase.Demo
 			Server.router = Funcrouter;
 			Server.Start(System.Net.IPAddress.Loopback,80);
 			IFileLoader lo = /*new SingularFSFileLoader("docs.fs_");*/ new LocalFileLoader("Docs\\");
-			new TemplateManager(lo);
+			new DocumentManager(lo);
 			Router.Add(lo, "index.html", "", (r) => { return r.Cookies.Get("Logged") != null; });
 			Router.Add(lo, "index.html", "", (r) => { return r.Cookies.Get("Logged") == "true"; });
 			Router.Add(lo, "login.html", "login");
@@ -46,7 +46,7 @@ namespace NetBase.Demo
                 HTTPResponse response = new HTTPResponse(
 					StatusCode.OK,
 					new HTTPCookies(),
-					TemplateManager.GetComponet("index.t.html").Use(null,dp),
+					DocumentManager.GetComponet("index.t.html").Use(null,dp),
 					ContentType.text_html
 				);
 				return response;

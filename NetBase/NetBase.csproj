@@ -65,9 +65,9 @@
     <Compile Include="Templating\Components\TComponent.cs" />
     <Compile Include="Templating\DataProvider.cs" />
     <Compile Include="Templating\Components\TComponentManager.cs" />
-    <Compile Include="Templating\Templates\Template.cs" />
-    <Compile Include="Templating\Templates\TemplateManager.cs" />
-    <Compile Include="Templating\Templates\ImportableTemplate.cs" />
+    <Compile Include="Templating\Documents\Document.cs" />
+    <Compile Include="Templating\Documents\DocumentManager.cs" />
+    <Compile Include="Templating\Documents\ImportableDocument.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

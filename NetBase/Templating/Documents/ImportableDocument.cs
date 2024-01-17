@@ -2,9 +2,9 @@
 
 namespace NetBase.Templating.Templates
 {
-	public class ImportableTemplate : Template
+	public class ImportableDocument : Document
 	{
-		public ImportableTemplate(string name, IFileLoader loader) : base(name)
+		public ImportableDocument(string name, IFileLoader loader) : base(name)
 		{
 			this.component = loader.Load(name);
 		}
