@@ -4,6 +4,8 @@ using System.Text;
 using NetBase.Communication;
 using NetBase.RuntimeLogger;
 using System.Net;
+using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace NetBase
 {
@@ -41,14 +43,20 @@ namespace NetBase
 		}
 		private static void Server_DataReceived(object sender, Message e)
 		{
+			Dictionary<string, long> timings = new Dictionary<string, long>();
+			Stopwatch sw = Stopwatch.StartNew();
 			HTTPRequest r = HTTPRequest.Parse(e.MessageString);
+			sw.Stop();timings.Add("RequestParse",sw.ElapsedMilliseconds);
 			HTTPResponse response;
 			if (StaticRouting.Router.IsStatic(r)) 
 			{
+				sw.Restart();
 				response = StaticRouting.Router.Respond(r);
+				sw.Stop(); timings.Add("StaticRouting", sw.ElapsedMilliseconds);
 			}
 			else
 			{
+				sw.Restart();
 				try
 				{
 					response = router.Invoke(r);
@@ -83,6 +91,7 @@ namespace NetBase
 						$"</body></html>";
 					response.contentType = ContentType.text_html;
 				}
+				sw.Stop(); timings.Add("DynamicRouting", sw.ElapsedMilliseconds);
 			}
 			if (response.Body == "" && response.Status == StatusCode.Not_Found)
 			{
@@ -96,6 +105,13 @@ namespace NetBase
 					$"</body></html>";
 				response.contentType = ContentType.text_html;
 			}
+			string servertiming = "";
+			foreach (var item in timings)
+			{
+				servertiming += $"{item.Key};dur={item.Value},";
+			}
+			servertiming.TrimEnd(',');
+			response.Headers.Add("Server-Timing", servertiming);
 			e.ReplyLine(response.ToString());
 		}
 	}

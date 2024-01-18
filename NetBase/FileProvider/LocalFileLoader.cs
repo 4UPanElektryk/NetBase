@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 namespace NetBase.FileProvider
 {
@@ -11,6 +12,11 @@ namespace NetBase.FileProvider
 		}
 		public string Load(string path)
 		{
+#if DEBUG
+			Console.ForegroundColor = ConsoleColor.Blue;
+            Console.WriteLine("Reading: " + directory + path);
+			Console.ResetColor();
+#endif
 			return File.ReadAllText(directory + path);
 		}
 		public string[] GetFiles()

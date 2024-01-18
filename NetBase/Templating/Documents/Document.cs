@@ -29,6 +29,10 @@ namespace NetBase.Templating.Templates
                 Console.WriteLine(components.Replace(component, match => Test(match, elements)));
                 ret += components.Replace(component, match => Test(match, elements));
 			}
+			else
+			{
+				ret = component;
+			}
 			if (provider != null)
 			{
 				ret = data.Replace(ret, match => provider.ContainsKey(match.Groups[1].Value) ? provider[match.Groups[1].Value] : $"<!-- ?missing \"{match.Groups[1].Value}\" -->");

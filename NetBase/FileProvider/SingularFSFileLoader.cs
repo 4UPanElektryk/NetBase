@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using SingularFS;
 
 namespace NetBase.FileProvider
@@ -10,7 +12,15 @@ namespace NetBase.FileProvider
 		{ 
 			fs = FSMod.Import(path);
 		}
-
+		public string Load(string path)
+		{
+#if DEBUG
+			Console.ForegroundColor = ConsoleColor.Blue;
+			Console.WriteLine("Reading: " + path);
+			Console.ResetColor();
+#endif
+			return fs.ReadAllText(path);
+		}
 		public string[] GetFiles()
 		{
 			List<string> files = new List<string>();
@@ -18,9 +28,5 @@ namespace NetBase.FileProvider
 			return files.ToArray(); 
 		}
 
-		public string Load(string path)
-		{
-			return fs.ReadAllText(path);
-		}
 	}
 }
