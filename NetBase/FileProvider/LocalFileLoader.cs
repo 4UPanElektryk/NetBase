@@ -8,7 +8,7 @@ namespace NetBase.FileProvider
 		readonly string directory;
 		public LocalFileLoader(string directory) 
 		{ 
-			this.directory = directory;
+			this.directory = directory.Replace('\\', Path.DirectorySeparatorChar);
 		}
 		public string Load(string path)
 		{

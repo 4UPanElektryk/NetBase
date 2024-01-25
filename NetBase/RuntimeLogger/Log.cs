@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using NetBase.Communication;
 
 namespace NetBase.RuntimeLogger
 {
@@ -8,7 +9,7 @@ namespace NetBase.RuntimeLogger
 		private static string Dir;
 		public Log(string dir)
 		{
-			Dir = AppDomain.CurrentDomain.BaseDirectory + dir;
+			Dir = AppDomain.CurrentDomain.BaseDirectory + dir.Replace('\\', Path.DirectorySeparatorChar);
 		}
 		public static void Write(string input)
 		{
@@ -29,12 +30,12 @@ namespace NetBase.RuntimeLogger
 				ToWrite
 			);
 		}
-		public static void Incident(Exception ex)
+		public static void Incident(Exception ex, string request = null)
 		{
-			string Time = DateTime.UtcNow.ToString("dd_MM_yyyy-HH_mm_ss_FFF") + ".log";
+			string Time = DateTime.UtcNow.ToString("dd_MM_yyyy-HH_mm_ss_FFF");
 			Console.WriteLine($"{Time}|Error:\n{ex}");
 			File.WriteAllText($"{Dir}{Time}.log",
-				ex.ToString()
+				$"{ex}\n\n{request}"
 			);
 		}
 	}

@@ -69,15 +69,15 @@ namespace NetBase
 						$"<html><head>" +
 						$"<title>500 Internal Server Error</title>" +
 						$"</head><body>" +
-						$"<h1>500 Internal Server Error</h1>" +
+						$"<h1><center>500 Internal Server Error</center></h1>" +
 						$"<h2>{ex.Message}</h2>" +
 						$"<p>Server Encountered an exception while trying to complete the reques</p>" +
 						$"<p>{ex.StackTrace}</p>" +
-						$"<hr> <a href=\"https://github.com/4UPanElektryk/NetBase\">NetBase</a>" +
+						$"<hr> <center><a href=\"https://github.com/4UPanElektryk/NetBase\">NetBase</a></center>" +
 						$"</body></html>",
 						ContentType.text_html
 					);
-					Log.Incident(ex);
+					Log.Incident(ex,e.MessageString);
 				}
 				if (response.Body == "" && (int)response.Status >= 400)
 				{
