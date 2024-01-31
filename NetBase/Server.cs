@@ -6,32 +6,33 @@ using NetBase.RuntimeLogger;
 using System.Net;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Exception = System.Exception;
 
 namespace NetBase
 {
 	public class Server
 	{
-		static SimpleTcpServer server;
-		public delegate HTTPResponse DataReceived(HTTPRequest request);
+		static SimpleTcpServer _server;
+		public delegate HttpResponse DataReceived(HTTPRequest request);
 		public static DataReceived router;
 		public static void Start(IPAddress address, int port)
 		{
 			new Log("Logs\\");
-			server = new SimpleTcpServer
+			_server = new SimpleTcpServer
 			{
 				StringEncoder = Encoding.UTF8,
-				Delimiter = (byte)'\n'
+				Delimiter = (byte)'\0',
 			};
-			server.DataReceived += Server_DataReceived;
+			_server.DataReceived += Server_DataReceived;
 			try
 			{
-				server.Start(address, port);
+				_server.Start(address, port);
 			}
-			catch
+			catch(Exception ex)
 			{
-				Log.Write("Startup Error");
+				Log.Write($"Startup Error {ex.Message}");
 			}
-			if (server.IsStarted)
+			if (_server.IsStarted)
 			{
 				Log.Write($"Server Started on http://{address}:{port}/");
 			}
@@ -47,7 +48,7 @@ namespace NetBase
 			Stopwatch sw = Stopwatch.StartNew();
 			HTTPRequest r = HTTPRequest.Parse(e.MessageString);
 			sw.Stop();timings.Add("RequestParse",sw.ElapsedMilliseconds);
-			HTTPResponse response;
+			HttpResponse response;
 			if (StaticRouting.Router.IsStatic(r)) 
 			{
 				sw.Restart();
@@ -63,7 +64,7 @@ namespace NetBase
 				}
 				catch (Exception ex)
 				{
-					response = new HTTPResponse(
+					response = new HttpResponse(
 						StatusCode.Internal_Server_Error,
 						new HTTPCookies(),
 						$"<html><head>" +

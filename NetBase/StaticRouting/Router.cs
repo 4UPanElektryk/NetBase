@@ -152,7 +152,7 @@ namespace NetBase.StaticRouting
 			}
 			throw new NotImplementedException("This should be imposible becouse this already checks if file is routed via this");
 		} 
-		public static HTTPResponse Respond(HTTPRequest request) 
+		public static HttpResponse Respond(HTTPRequest request) 
 		{
 			Rout r = GetRout(request);
 			ContentType type = ContentType.text_plain;
@@ -160,14 +160,14 @@ namespace NetBase.StaticRouting
 			if (lookupTable.ContainsKey(ext)) {type = lookupTable[ext];}
 			try
 			{
-				return new HTTPResponse(StatusCode.OK, null, r.loader.Load(r.LocalPath), type);
+				return new HttpResponse(StatusCode.OK, null, r.loader.Load(r.LocalPath), type);
 			}
 			catch (Exception ex)
 			{
 				Log.Incident(ex);
 				if(ex is FileNotFoundException)
 				{
-					return new HTTPResponse(StatusCode.Not_Found, null, 
+					return new HttpResponse(StatusCode.Not_Found, null, 
 						$"<html><head><title>File was not found</title></head>" +
 						$"<body><h1>File was not found by Router</h1>" +
 						$"<p>Local File: \"{r.LocalPath}\"</p>" +
