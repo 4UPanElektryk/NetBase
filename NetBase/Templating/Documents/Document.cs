@@ -1,12 +1,6 @@
-﻿using NetBase.Templating.Components;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+using NetBase.Templating.Components;
 
 namespace NetBase.Templating.Templates
 {
@@ -18,7 +12,7 @@ namespace NetBase.Templating.Templates
 		{
 			AssetName = name;
 		}
-		// Component would be with {$name$}
+		// Component would be with {$na.me$}
 		public string Use(Dictionary<string,DataProvider> elements = null, Dictionary<string, string> provider = null)
 		{
 			Regex components = new Regex(@"\{\$(\w+.\w+)\$\}", RegexOptions.Compiled);
@@ -26,7 +20,6 @@ namespace NetBase.Templating.Templates
 			string ret = "";
 			if (elements != null)
 			{
-                Console.WriteLine(components.Replace(component, match => Test(match, elements)));
                 ret += components.Replace(component, match => Test(match, elements));
 			}
 			else
