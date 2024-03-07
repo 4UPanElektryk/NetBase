@@ -4,11 +4,13 @@ using NetBase.Templating.Components;
 
 namespace NetBase.Templating.Templates
 {
-	public class Document
+	public class Page
 	{
 		public string component;
 		public readonly string AssetName;
-		public Document(string name)
+        public string LayoutName { get { return PageData["Layout"]; } }
+        public Dictionary<string, string> PageData;
+		public Page(string name)
 		{
 			AssetName = name;
 		}
