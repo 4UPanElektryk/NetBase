@@ -9,6 +9,6 @@ namespace NetBase.StaticRouting
 		public string LocalPath;
 		public string ServerPath;
 		public IFileLoader loader;
-		public Func<HTTPRequest, bool> OverrideCase;
+		public Func<HttpRequest, bool> OverrideCase;
 	}
 }

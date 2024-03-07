@@ -55,7 +55,6 @@
       <Name>NetBase</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <Content Include="Docs\index.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

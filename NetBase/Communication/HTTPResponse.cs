@@ -8,15 +8,15 @@ namespace NetBase.Communication
 	{
 		public StatusCode Status;
 		public ContentType contentType;
-		public HTTPCookies Cookies;
+		public HttpCookies Cookies;
 		public Dictionary<string,string> Headers;
 		public string Body;
-		public HttpResponse(StatusCode status, HTTPCookies cookies = null, string body = "", ContentType contenttype = ContentType.text_plain)
+		public HttpResponse(StatusCode status, HttpCookies cookies = null, string body = "", ContentType contenttype = ContentType.text_plain)
 		{
 			Status = status;
 			if (cookies == null)
 			{
-				cookies = new HTTPCookies();
+				cookies = new HttpCookies();
 			}
 			Cookies = cookies;
 			Headers = new Dictionary<string, string>();

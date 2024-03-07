@@ -23,60 +23,60 @@ namespace NetBase.Demo
 			Router.Add(lo, "login.html", "login");
 			Console.ReadKey(true);
 		}
-		public static HTTPResponse Funcrouter(HTTPRequest request)
+		public static HttpResponse Funcrouter(HttpRequest request)
 		{
-			HTTPResponse res = new HTTPResponse(StatusCode.Method_Not_Allowed);
-			string ReasonPhrase = Enum.GetName(typeof(HTTPMethod), (int)request.Method);
+			HttpResponse res = new HttpResponse(StatusCode.Method_Not_Allowed);
+			string ReasonPhrase = Enum.GetName(typeof(HttpMethod), (int)request.Method);
 			Console.WriteLine($"{ReasonPhrase} ({request.Url})");
-			if (request.Method == HTTPMethod.GET)
+			if (request.Method == HttpMethod.GET)
 			{
 				res = HandleGET(request);
 			}
-			else if (request.Method == HTTPMethod.POST)
+			else if (request.Method == HttpMethod.POST)
 			{
 				res = HandlePOST(request);
 			}
             return res;
 		}
-		public static HTTPResponse HandleGET(HTTPRequest request) 
+		public static HttpResponse HandleGET(HttpRequest request) 
 		{
 			if (request.Url == "" && request.Cookies.Get("Logged") == "true")
 			{
 				Dictionary<string, string> dp = new Dictionary<string, string>() { { "name", "somebody" } };
-                HTTPResponse response = new HTTPResponse(
+				HttpResponse response = new HttpResponse(
 					StatusCode.OK,
-					new HTTPCookies(),
-					DocumentManager.GetComponet("index.t.html").Use(null,dp),
+					new HttpCookies(),
+					PageManager.GetPage("index.t.html").Use(null,dp),
 					ContentType.text_html
 				);
 				return response;
 			}
 			else if (request.Url == "logout") 
 			{
-				HTTPCookies cookies = new HTTPCookies();
+				HttpCookies cookies = new HttpCookies();
 				cookies.Set("Logged", "false");
-				HTTPResponse response = new HTTPResponse(StatusCode.Moved_Permanently, cookies);
+				HttpResponse response = new HttpResponse(StatusCode.Moved_Permanently, cookies);
 				response.Headers.Add("Location", "/");
 				return response;
 			}
 			else
 			{
-				return new HTTPResponse(StatusCode.Not_Found);
+				return new HttpResponse(StatusCode.Not_Found);
 			}
 		}
-		public static HTTPResponse HandlePOST(HTTPRequest request)
+		public static HttpResponse HandlePOST(HttpRequest request)
 		{
-            if (request.body == "email=joe%40example.com&password=1234")
+            if (request.PostData["email"] == "joe@example.com" && request.PostData["password"] == "1234")
 			{
-                HTTPCookies cookies = new HTTPCookies();
+                HttpCookies cookies = new HttpCookies();
 				cookies.Set("Logged", "true");
-				HTTPResponse response = new HTTPResponse(StatusCode.Moved_Permanently, cookies);
+				HttpResponse response = new HttpResponse(StatusCode.Moved_Permanently, cookies);
 				response.Headers.Add("Location", "/");
 				return response;
 			}
 			else 
 			{
-				return new HTTPResponse(StatusCode.Not_Found);
+				return new HttpResponse(StatusCode.Not_Found);
 			}
 		}
 	}
