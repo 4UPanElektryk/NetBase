@@ -83,7 +83,7 @@ namespace NetBase.StaticRouting
 				Add(loader,pitem, prefix + pitem);
 			}
 		}
-		public static void Add(IFileLoader loader, string LocalPath, string Url = null, Func<HTTPRequest, bool> Overrdide = null)
+		public static void Add(IFileLoader loader, string LocalPath, string Url = null, Func<HttpRequest, bool> Overrdide = null)
 		{
 			if (loader == null)
 				throw new ArgumentNullException(nameof(loader));
@@ -97,14 +97,14 @@ namespace NetBase.StaticRouting
 				OverrideCase = Overrdide,
 			});
 		}
-		public static bool IsStatic(HTTPRequest r)
+		public static bool IsStatic(HttpRequest r)
 		{
 #if DEBUG
 			Console.ForegroundColor = ConsoleColor.Yellow;
 			Console.WriteLine($"Checking Rout ({r.Url})");
 			Console.ResetColor();
 #endif
-			if (r.Method != HTTPMethod.GET) {
+			if (r.Method != HttpMethod.GET) {
 #if DEBUG
 				Console.ForegroundColor = ConsoleColor.Red;
 				Console.WriteLine($"Routing not met for using diffrent method ({r.Method})");
@@ -141,7 +141,7 @@ namespace NetBase.StaticRouting
 #endif
 			return false;
 		}
-		private static Rout GetRout(HTTPRequest r) 
+		private static Rout GetRout(HttpRequest r) 
 		{ 
 			foreach (var rout in RoutingTable) 
 			{
@@ -152,7 +152,7 @@ namespace NetBase.StaticRouting
 			}
 			throw new NotImplementedException("This should be imposible becouse this already checks if file is routed via this");
 		} 
-		public static HttpResponse Respond(HTTPRequest request) 
+		public static HttpResponse Respond(HttpRequest request) 
 		{
 			Rout r = GetRout(request);
 			ContentType type = ContentType.text_plain;

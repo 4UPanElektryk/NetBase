@@ -1,10 +1,12 @@
 ﻿using System;
+using NetBase.FileProvider;
 namespace NetBase.Templating.Layouts
 {
-	public class ImportableLayout
+	public class ImportableLayout : Layout
 	{
-		public ImportableLayout()
+		public ImportableLayout(string name, IFileLoader loader) : base(name)
 		{
+			Analize(loader.Load(name));
 		}
 	}
 }

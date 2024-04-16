@@ -2,19 +2,20 @@
 using System.Text.RegularExpressions;
 using NetBase.Templating.Components;
 
-namespace NetBase.Templating.Templates
+namespace NetBase.Templating.Pages
 {
-	public class Page
+	public class Page : TemplateAsset
 	{
-		public string component;
-		public readonly string AssetName;
-        public string LayoutName { get { return PageData["Layout"]; } }
+		public string Component { get; set; }
+		public string AssetName { get; set; }
+        public string LayoutName { get { return PageData.ContainsKey("Layout") ? PageData["Layout"] : "Default.lt"; } }
         public Dictionary<string, string> PageData;
 		public Page(string name)
 		{
+			PageData = new Dictionary<string, string>();
 			AssetName = name;
 		}
-		// Component would be with {$na.me$}
+		// Component would be with {$name.comp$}
 		public string Use(Dictionary<string,DataProvider> elements = null, Dictionary<string, string> provider = null)
 		{
 			Regex components = new Regex(@"\{\$(\w+.\w+)\$\}", RegexOptions.Compiled);
@@ -22,11 +23,11 @@ namespace NetBase.Templating.Templates
 			string ret = "";
 			if (elements != null)
 			{
-                ret += components.Replace(component, match => Test(match, elements));
+                ret += components.Replace(Component, match => Test(match, elements));
 			}
 			else
 			{
-				ret = component;
+				ret = Component;
 			}
 			if (provider != null)
 			{
@@ -39,19 +40,32 @@ namespace NetBase.Templating.Templates
 			string nmatch = match.Groups[1].Value;
             if (TComponentManager.GetComponet(nmatch) != null)
 			{
-				if (elements.ContainsKey(nmatch))
-				{
-					return TComponentManager.GetComponet(nmatch).Use(elements[nmatch]);
-				}
-				else
-				{
-					return TComponentManager.GetComponet(nmatch).Use(null);
-				}
+                return TComponentManager.GetComponet(nmatch).Use(elements.ContainsKey(nmatch) ? elements[nmatch] : null);
 			}
-			else
-			{
-				return $"<!-- ?missing \"{nmatch}\" -->";
-			}
+            return $"<!-- ?missing \"{nmatch}\" -->";
 		}
-	}
+        protected void Analize(string component)
+        {
+            string[] comp = component.Split('\n');
+            Dictionary<string, string> data = new Dictionary<string, string>();
+            string newcomponent = "";
+            foreach (var item in comp)
+            {
+                if (item.StartsWith("@"))
+                {
+                    string key, val;
+                    key = item.Substring(1).Split(':')[0];
+                    val = item.Substring(key.Length + 2).TrimStart(' ');
+					data.Add(key, val);
+                }
+                else
+                {
+                    newcomponent += item + "\n";
+                }
+            }
+			Layouts.LayoutManager.Add(this);
+            this.PageData = data;
+            this.Component = newcomponent;
+        }
+    }
 }

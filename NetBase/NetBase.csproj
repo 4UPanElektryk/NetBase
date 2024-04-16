@@ -69,6 +69,10 @@
     <Compile Include="Templating\Pages\PageManager.cs" />
     <Compile Include="Templating\Pages\ImportablePage.cs" />
     <Compile Include="Templating\Layouts\Layout.cs" />
+    <Compile Include="Templating\TemplateAsset.cs" />
+    <Compile Include="Templating\Layouts\LayoutManager.cs" />
+    <Compile Include="Templating\Layouts\ImportableLayout.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
