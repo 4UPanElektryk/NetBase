@@ -48,10 +48,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Communication\ContentType.cs" />
-    <Compile Include="Communication\HTTPMethod.cs" />
-    <Compile Include="Communication\HTTPCookies.cs" />
-    <Compile Include="Communication\HTTPRequest.cs" />
-    <Compile Include="Communication\HTTPResponse.cs" />
+    <Compile Include="Communication\HttpMethod.cs" />
+    <Compile Include="Communication\HttpCookies.cs" />
+    <Compile Include="Communication\HttpRequest.cs" />
+    <Compile Include="Communication\HttpResponse.cs" />
     <Compile Include="Communication\StatusCode.cs" />
     <Compile Include="FileProvider\IFileLoader.cs" />
     <Compile Include="FileProvider\LocalFileLoader.cs" />

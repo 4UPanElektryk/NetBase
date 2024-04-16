@@ -54,10 +54,6 @@
       <Name>NetBase</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
-  <!--<ItemGroup>
-    <Folder Include="docs\" />
-  </ItemGroup>-->
   <ItemGroup>
     <Content Include="docs\*.*">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

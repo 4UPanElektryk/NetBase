@@ -57,7 +57,9 @@ namespace NetBase.Demo
 			else if (request.Url == "logout") 
 			{
 				HttpCookies cookies = new HttpCookies();
+				HttpCookies cookies = new HttpCookies();
 				cookies.Set("Logged", "false");
+				HttpResponse response = new HttpResponse(StatusCode.Moved_Permanently, cookies);
 				HttpResponse response = new HttpResponse(StatusCode.Moved_Permanently, cookies);
 				response.Headers.Add("Location", "/");
 				return response;
@@ -69,7 +71,7 @@ namespace NetBase.Demo
 		}
 		public static HttpResponse HandlePOST(HttpRequest request)
 		{
-            if (request.body == "email=joe%40example.com&password=1234")
+            if (request.PostData["email"] == "joe@example.com" && request.PostData["password"] == "1234")
 			{
                 HttpCookies cookies = new HttpCookies();
 				cookies.Set("Logged", "true");
