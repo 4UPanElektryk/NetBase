@@ -1,6 +1,7 @@
 ﻿using NetBase.Communication;
 using NetBase.FileProvider;
 using NetBase.RuntimeLogger;
+using NetBase.Templating.Pages;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -26,6 +27,8 @@ namespace NetBase.StaticRouting
 
 		};
 		public static List<Rout> RoutingTable = new List<Rout>();
+		//key is url and value is pagefile name
+		public static Dictionary<string, string> PagesRoutingTable = new Dictionary<string, string>();
 		private static Dictionary<string, string> ParseData(string data)
 		{
 			Dictionary<string, string> d = new Dictionary<string, string>();
@@ -134,6 +137,15 @@ namespace NetBase.StaticRouting
 					return true;
 				}
 			}
+			if (PagesRoutingTable.ContainsKey(r.Url))
+			{
+#if DEBUG
+				Console.ForegroundColor = ConsoleColor.Green;
+				Console.WriteLine($"Static Page Rout found ({r.Url})");
+				Console.ResetColor();
+#endif
+				return true;
+			}
 #if DEBUG
 			Console.ForegroundColor = ConsoleColor.Blue;
 			Console.WriteLine($"Not Static Rout ({r.Url})");
@@ -154,6 +166,10 @@ namespace NetBase.StaticRouting
 		} 
 		public static HttpResponse Respond(HttpRequest request) 
 		{
+			if (PagesRoutingTable.ContainsKey(request.Url))
+			{
+				return new HttpResponse(StatusCode.OK, null, PageManager.GetPagePlain(PagesRoutingTable[request.Url]), ContentType.text_html);
+			}
 			Rout r = GetRout(request);
 			ContentType type = ContentType.text_plain;
 			string ext = r.LocalPath.Split('.').Last();

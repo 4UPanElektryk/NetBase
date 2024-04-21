@@ -55,7 +55,7 @@ namespace NetBase.Templating.Layouts
                 {
                     string key, val;
                     key = item.Substring(1).Split(':')[0];
-                    val = item.Substring(key.Length + 2).TrimStart(' ');
+                    val = item.Substring(key.Length + 2).Trim();
 					data.Add(key, val);
                 }
                 else

@@ -3,6 +3,7 @@
 @LinkTo:login
 @Visible:true
 @Title:Funny
+@AutoRout:login
 <h1>Login</h1>
 <form action="/login" method="post">
 	<label for="email">Email</label>

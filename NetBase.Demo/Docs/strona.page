@@ -1,0 +1,8 @@
+@Layout:Default.lt
+@Name:cos
+@LinkTo:test
+@Visible:true
+@Title:Funny2
+@AutoRout:test
+<h1>cos</h1>
+<h2>haha</h2>

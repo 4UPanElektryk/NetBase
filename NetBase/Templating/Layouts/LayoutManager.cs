@@ -35,12 +35,12 @@ namespace NetBase.Templating.Layouts
 		{
 			Layout lt = Layouts.Find((obj) => obj.AssetName == p.LayoutName);
 			DataProvider pr = new DataProvider();
-			//pr.Add(p.PageData);
-			foreach (var item in LayoutsPages[p.LayoutName])
+            foreach (var item in LayoutsPages[p.LayoutName])
 			{
 				if (item.PageData.ContainsKey("Visible") && bool.Parse(item.PageData["Visible"]))
 				{
-					Dictionary <string, string> temp = p.PageData.ToDictionary(entry => entry.Key,entry => entry.Value);
+                    Console.WriteLine(item.AssetName);
+                    Dictionary <string, string> temp = item.PageData.ToDictionary(entry => entry.Key,entry => entry.Value);
 					temp.Add("Active", item.AssetName == p.AssetName ? lt.LayoutData["ActiveElementValue"] : "");
 					pr.Add(temp);
 				}

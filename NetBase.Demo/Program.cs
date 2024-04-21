@@ -18,10 +18,7 @@ namespace NetBase.Demo
 			new nt.Components.TComponentManager(lo);
 			new nt.Pages.PageManager(lo);
 			new nt.Layouts.LayoutManager(lo);
-			//new DocumentManager(lo);
-			//Router.Add(lo, "index.html", "", (r) => { return r.Cookies.Get("Logged") != null; });
-			Router.Add(lo, "index.html", "", (r) => { return r.Cookies.Get("Logged") == "true"; });
-			//Router.Add(lo, "login.html", "login");
+			Router.InitFromINI(lo);
 			Console.ReadLine();
 		}
 		public static HttpResponse Funcrouter(HttpRequest request)
@@ -41,7 +38,15 @@ namespace NetBase.Demo
 		}
 		public static HttpResponse HandleGET(HttpRequest request) 
 		{
-			return new HttpResponse(StatusCode.OK,null,nt.Pages.PageManager.GetPagePlain("login.page"),ContentType.text_html);
+			/*if (request.Url == "login")
+			{
+				return new HttpResponse(StatusCode.OK,null,nt.Pages.PageManager.GetPagePlain("login.page"),ContentType.text_html);
+			}
+			if (request.Url == "test")
+			{
+				return new HttpResponse(StatusCode.OK, null, nt.Pages.PageManager.GetPagePlain("strona.page"), ContentType.text_html);
+			}*/
+			return new HttpResponse(StatusCode.Not_Found);
 			/*if (request.Url == "" && request.Cookies.Get("Logged") == "true")
 			{
 				Dictionary<string, string> dp = new Dictionary<string, string>() { { "name", "somebody" } };

@@ -1,1 +1,1 @@
-<li class="$Active$"><a href="$LinkTo$">$Name$</a></li>
+<a href="$LinkTo$"><li class="$Active$">$Name$</li></a>
