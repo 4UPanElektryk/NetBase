@@ -3,30 +3,30 @@ using System.Collections.Generic;
 using System.Linq;
 namespace NetBase.Communication
 {
-	public class HTTPRequest
+	public class HttpRequest
 	{
 		public string Url;
 		public Dictionary<string, string> URLParamenters;
 		public string HTTPVersion;
-		public HTTPMethod Method;
+		public HttpMethod Method;
 		public Dictionary<string,string> Headers;
 		public Dictionary<string,string> PostData;
-		public HTTPCookies Cookies;
+		public HttpCookies Cookies;
 		public string body;
-		public HTTPRequest()
+		public HttpRequest()
 		{
 			URLParamenters = new Dictionary<string, string>();
 			Headers = new Dictionary<string, string>();
 			PostData = new Dictionary<string, string>();
-			Cookies = new HTTPCookies();
+			Cookies = new HttpCookies();
 		}
-		public static HTTPRequest Parse(string data)
+		public static HttpRequest Parse(string data)
 		{
 			string[] lines = data.Split("\r\n".ToCharArray(),StringSplitOptions.RemoveEmptyEntries);
 			string path = lines[0].Split(' ')[1];
-			HTTPRequest request = new HTTPRequest
+			HttpRequest request = new HttpRequest
 			{
-				Method = (HTTPMethod)Enum.Parse(typeof(HTTPMethod), lines[0].Split(' ')[0]),
+				Method = (HttpMethod)Enum.Parse(typeof(HttpMethod), lines[0].Split(' ')[0]),
 				HTTPVersion = lines[0].Split(' ')[2]
 			};
 			if (path.Contains("?"))
@@ -73,7 +73,7 @@ namespace NetBase.Communication
 			{
 				request.body = data.Substring(data.Length - int.Parse(request.Headers["Content-Length"]), int.Parse(request.Headers["Content-Length"]));
 			}
-			if (request.Method == HTTPMethod.POST)
+			if (request.Method == HttpMethod.POST)
 			{
 				foreach (var item in request.body.Split('&'))
 				{

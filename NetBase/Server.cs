@@ -6,14 +6,13 @@ using NetBase.RuntimeLogger;
 using System.Net;
 using System.Collections.Generic;
 using System.Diagnostics;
-using Exception = System.Exception;
 
 namespace NetBase
 {
 	public class Server
 	{
 		static SimpleTcpServer _server;
-		public delegate HttpResponse DataReceived(HTTPRequest request);
+		public delegate HttpResponse DataReceived(HttpRequest request);
 		public static DataReceived router;
 		public static void Start(IPAddress address, int port)
 		{
@@ -46,7 +45,7 @@ namespace NetBase
 		{
 			Dictionary<string, long> timings = new Dictionary<string, long>();
 			Stopwatch sw = Stopwatch.StartNew();
-			HTTPRequest r = HTTPRequest.Parse(e.MessageString);
+			HttpRequest r = HttpRequest.Parse(e.MessageString);
 			sw.Stop();timings.Add("RequestParse",sw.ElapsedMilliseconds);
 			HttpResponse response;
 			if (StaticRouting.Router.IsStatic(r)) 
@@ -66,7 +65,7 @@ namespace NetBase
 				{
 					response = new HttpResponse(
 						StatusCode.Internal_Server_Error,
-						new HTTPCookies(),
+						new HttpCookies(),
 						$"<html><head>" +
 						$"<title>500 Internal Server Error</title>" +
 						$"</head><body>" +

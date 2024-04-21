@@ -1,0 +1,14 @@
+@Layout:Default.lt
+@Name:Login
+@LinkTo:login
+@Visible:true
+@Title:Funny
+@AutoRout:login
+<h1>Login</h1>
+<form action="/login" method="post">
+	<label for="email">Email</label>
+	<input type="email" name="email" placeholder="joe@example.com" />
+	<label for="password">Password</label>
+	<input type="password" name="password"/>
+	<input type="submit" value="Log In" />
+</form>

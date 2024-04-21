@@ -1,6 +1,6 @@
 ﻿namespace NetBase.Communication
 {
-	public enum HTTPMethod
+	public enum HttpMethod
 	{
 		GET,
 		POST,
