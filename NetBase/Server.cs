@@ -4,21 +4,26 @@ using System.Text;
 using NetBase.Communication;
 using NetBase.RuntimeLogger;
 using System.Net;
+using System.Net.Sockets;
 using System.Collections.Generic;
 using System.Diagnostics;
-using Exception = System.Exception;
+using System.Threading;
 
 namespace NetBase
 {
 	public class Server
 	{
-		static SimpleTcpServer _server;
+		private static TcpListener listener;
 		public delegate HttpResponse DataReceived(HTTPRequest request);
 		public static DataReceived router;
 		public static void Start(IPAddress address, int port)
 		{
 			new Log("Logs\\");
-			_server = new SimpleTcpServer
+			listener = new TcpListener(address,port);
+			listener.Start();
+			Thread th = new Thread(new ThreadStart(StartListen));
+			th.Start();
+			/*_server = new SimpleTcpServer
 			{
 				StringEncoder = Encoding.UTF8,
 				Delimiter = (byte)'\0',
@@ -40,8 +45,34 @@ namespace NetBase
 			{
 				Log.Write("Server Failed to Start");
 			}
-
+			*/
 		}
+
+		public static void StartListen()
+		{
+			while (true)
+			{
+				//Accept a new connection  
+				Socket mySocket = listener.AcceptSocket();
+				Console.WriteLine("Socket Type " + mySocket.SocketType);
+				if (mySocket.Connected)
+				{
+					Console.WriteLine("\nClient Connected!!\n==================\n  CLient IP { 0}\n", mySocket.RemoteEndPoint) ;  
+					//make a byte array and receive data from the client   
+					Byte[] bReceive = new Byte[1048576];
+					int i = mySocket.Receive(bReceive, bReceive.Length, 0);
+					//Convert Byte to String  
+					string sBuffer = Encoding.ASCII.GetString(bReceive);
+					HTTPRequest d = HTTPRequest.Parse(sBuffer);
+                    foreach (var item in d.Headers)
+                    {
+                        Console.WriteLine(item);
+                    }
+
+                }
+			}
+		}
+
 		private static void Server_DataReceived(object sender, Message e)
 		{
 			Dictionary<string, long> timings = new Dictionary<string, long>();
