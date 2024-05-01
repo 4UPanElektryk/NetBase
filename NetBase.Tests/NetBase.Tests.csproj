@@ -49,8 +49,10 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Components.cs" />
+    <Compile Include="TestComponents.cs" />
+    <Compile Include="DummyFileLoader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestLayouts.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

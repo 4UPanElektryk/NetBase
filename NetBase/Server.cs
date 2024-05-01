@@ -77,7 +77,7 @@ namespace NetBase
 		{
 			Dictionary<string, long> timings = new Dictionary<string, long>();
 			Stopwatch sw = Stopwatch.StartNew();
-			HTTPRequest r = HTTPRequest.Parse(e.MessageString);
+			HttpRequest r = HttpRequest.Parse(e.MessageString);
 			sw.Stop();timings.Add("RequestParse",sw.ElapsedMilliseconds);
 			HttpResponse response;
 			if (StaticRouting.Router.IsStatic(r)) 
@@ -97,7 +97,7 @@ namespace NetBase
 				{
 					response = new HttpResponse(
 						StatusCode.Internal_Server_Error,
-						new HTTPCookies(),
+						new HttpCookies(),
 						$"<html><head>" +
 						$"<title>500 Internal Server Error</title>" +
 						$"</head><body>" +

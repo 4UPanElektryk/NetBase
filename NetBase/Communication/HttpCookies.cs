@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 namespace NetBase.Communication
 {
-	public class HTTPCookies
+	public class HttpCookies
 	{
 		private Dictionary<string, string> Cookies;
-		public HTTPCookies() 
+		public HttpCookies() 
 		{ 
 			Cookies = new Dictionary<string, string>();
 		}

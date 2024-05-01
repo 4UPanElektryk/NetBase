@@ -1,6 +1,7 @@
 ﻿using NetBase.Communication;
 using NetBase.FileProvider;
 using NetBase.RuntimeLogger;
+using NetBase.Templating.Pages;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -26,6 +27,8 @@ namespace NetBase.StaticRouting
 
 		};
 		public static List<Rout> RoutingTable = new List<Rout>();
+		//key is url and value is pagefile name
+		public static Dictionary<string, string> PagesRoutingTable = new Dictionary<string, string>();
 		private static Dictionary<string, string> ParseData(string data)
 		{
 			Dictionary<string, string> d = new Dictionary<string, string>();
@@ -83,7 +86,7 @@ namespace NetBase.StaticRouting
 				Add(loader,pitem, prefix + pitem);
 			}
 		}
-		public static void Add(IFileLoader loader, string LocalPath, string Url = null, Func<HTTPRequest, bool> Overrdide = null)
+		public static void Add(IFileLoader loader, string LocalPath, string Url = null, Func<HttpRequest, bool> Overrdide = null)
 		{
 			if (loader == null)
 				throw new ArgumentNullException(nameof(loader));
@@ -97,14 +100,14 @@ namespace NetBase.StaticRouting
 				OverrideCase = Overrdide,
 			});
 		}
-		public static bool IsStatic(HTTPRequest r)
+		public static bool IsStatic(HttpRequest r)
 		{
 #if DEBUG
 			Console.ForegroundColor = ConsoleColor.Yellow;
 			Console.WriteLine($"Checking Rout ({r.Url})");
 			Console.ResetColor();
 #endif
-			if (r.Method != HTTPMethod.GET) {
+			if (r.Method != HttpMethod.GET) {
 #if DEBUG
 				Console.ForegroundColor = ConsoleColor.Red;
 				Console.WriteLine($"Routing not met for using diffrent method ({r.Method})");
@@ -134,6 +137,15 @@ namespace NetBase.StaticRouting
 					return true;
 				}
 			}
+			if (PagesRoutingTable.ContainsKey(r.Url))
+			{
+#if DEBUG
+				Console.ForegroundColor = ConsoleColor.Green;
+				Console.WriteLine($"Static Page Rout found ({r.Url})");
+				Console.ResetColor();
+#endif
+				return true;
+			}
 #if DEBUG
 			Console.ForegroundColor = ConsoleColor.Blue;
 			Console.WriteLine($"Not Static Rout ({r.Url})");
@@ -141,7 +153,7 @@ namespace NetBase.StaticRouting
 #endif
 			return false;
 		}
-		private static Rout GetRout(HTTPRequest r) 
+		private static Rout GetRout(HttpRequest r) 
 		{ 
 			foreach (var rout in RoutingTable) 
 			{
@@ -152,8 +164,12 @@ namespace NetBase.StaticRouting
 			}
 			throw new NotImplementedException("This should be imposible becouse this already checks if file is routed via this");
 		} 
-		public static HttpResponse Respond(HTTPRequest request) 
+		public static HttpResponse Respond(HttpRequest request) 
 		{
+			if (PagesRoutingTable.ContainsKey(request.Url))
+			{
+				return new HttpResponse(StatusCode.OK, null, PageManager.GetPagePlain(PagesRoutingTable[request.Url]), ContentType.text_html);
+			}
 			Rout r = GetRout(request);
 			ContentType type = ContentType.text_plain;
 			string ext = r.LocalPath.Split('.').Last();
