@@ -29,6 +29,10 @@
 		private void InitializeComponent()
 		{
 			this.porperties = new System.Windows.Forms.GroupBox();
+			this.label2 = new System.Windows.Forms.Label();
+			this.label3 = new System.Windows.Forms.Label();
+			this.LFile = new System.Windows.Forms.Label();
+			this.label1 = new System.Windows.Forms.Label();
 			this.listView1 = new System.Windows.Forms.ListView();
 			this.menuStrip1 = new System.Windows.Forms.MenuStrip();
 			this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -37,16 +41,16 @@
 			this.addToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.exportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-			this.label1 = new System.Windows.Forms.Label();
-			this.LFile = new System.Windows.Forms.Label();
-			this.label2 = new System.Windows.Forms.Label();
-			this.label3 = new System.Windows.Forms.Label();
+			this.label4 = new System.Windows.Forms.Label();
+			this.checkBox1 = new System.Windows.Forms.CheckBox();
 			this.porperties.SuspendLayout();
 			this.menuStrip1.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// porperties
 			// 
+			this.porperties.Controls.Add(this.checkBox1);
+			this.porperties.Controls.Add(this.label4);
 			this.porperties.Controls.Add(this.label2);
 			this.porperties.Controls.Add(this.label3);
 			this.porperties.Controls.Add(this.LFile);
@@ -57,6 +61,42 @@
 			this.porperties.TabIndex = 0;
 			this.porperties.TabStop = false;
 			this.porperties.Text = "Properties";
+			// 
+			// label2
+			// 
+			this.label2.AutoSize = true;
+			this.label2.Location = new System.Drawing.Point(42, 33);
+			this.label2.Name = "label2";
+			this.label2.Size = new System.Drawing.Size(35, 13);
+			this.label2.TabIndex = 3;
+			this.label2.Text = "label2";
+			// 
+			// label3
+			// 
+			this.label3.AutoSize = true;
+			this.label3.Location = new System.Drawing.Point(7, 33);
+			this.label3.Name = "label3";
+			this.label3.Size = new System.Drawing.Size(29, 13);
+			this.label3.TabIndex = 2;
+			this.label3.Text = "File: ";
+			// 
+			// LFile
+			// 
+			this.LFile.AutoSize = true;
+			this.LFile.Location = new System.Drawing.Point(42, 20);
+			this.LFile.Name = "LFile";
+			this.LFile.Size = new System.Drawing.Size(35, 13);
+			this.LFile.TabIndex = 1;
+			this.LFile.Text = "label2";
+			// 
+			// label1
+			// 
+			this.label1.AutoSize = true;
+			this.label1.Location = new System.Drawing.Point(7, 20);
+			this.label1.Name = "label1";
+			this.label1.Size = new System.Drawing.Size(29, 13);
+			this.label1.TabIndex = 0;
+			this.label1.Text = "File: ";
 			// 
 			// listView1
 			// 
@@ -91,25 +131,25 @@
 			// saveToolStripMenuItem
 			// 
 			this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-			this.saveToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.saveToolStripMenuItem.Size = new System.Drawing.Size(108, 22);
 			this.saveToolStripMenuItem.Text = "Save";
 			// 
 			// openToolStripMenuItem
 			// 
 			this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-			this.openToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.openToolStripMenuItem.Size = new System.Drawing.Size(108, 22);
 			this.openToolStripMenuItem.Text = "Open";
 			// 
 			// addToolStripMenuItem
 			// 
 			this.addToolStripMenuItem.Name = "addToolStripMenuItem";
-			this.addToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.addToolStripMenuItem.Size = new System.Drawing.Size(108, 22);
 			this.addToolStripMenuItem.Text = "Add";
 			// 
 			// exportToolStripMenuItem
 			// 
 			this.exportToolStripMenuItem.Name = "exportToolStripMenuItem";
-			this.exportToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.exportToolStripMenuItem.Size = new System.Drawing.Size(108, 22);
 			this.exportToolStripMenuItem.Text = "Export";
 			// 
 			// openFileDialog1
@@ -117,41 +157,24 @@
 			this.openFileDialog1.FileName = "openFileDialog1";
 			this.openFileDialog1.Filter = "All files (*.*)|*.*";
 			// 
-			// label1
+			// label4
 			// 
-			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(7, 20);
-			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(29, 13);
-			this.label1.TabIndex = 0;
-			this.label1.Text = "File: ";
+			this.label4.AutoSize = true;
+			this.label4.Location = new System.Drawing.Point(7, 46);
+			this.label4.Name = "label4";
+			this.label4.Size = new System.Drawing.Size(29, 13);
+			this.label4.TabIndex = 4;
+			this.label4.Text = "File: ";
 			// 
-			// LFile
+			// checkBox1
 			// 
-			this.LFile.AutoSize = true;
-			this.LFile.Location = new System.Drawing.Point(42, 20);
-			this.LFile.Name = "LFile";
-			this.LFile.Size = new System.Drawing.Size(35, 13);
-			this.LFile.TabIndex = 1;
-			this.LFile.Text = "label2";
-			// 
-			// label2
-			// 
-			this.label2.AutoSize = true;
-			this.label2.Location = new System.Drawing.Point(42, 33);
-			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(35, 13);
-			this.label2.TabIndex = 3;
-			this.label2.Text = "label2";
-			// 
-			// label3
-			// 
-			this.label3.AutoSize = true;
-			this.label3.Location = new System.Drawing.Point(7, 33);
-			this.label3.Name = "label3";
-			this.label3.Size = new System.Drawing.Size(29, 13);
-			this.label3.TabIndex = 2;
-			this.label3.Text = "File: ";
+			this.checkBox1.AutoSize = true;
+			this.checkBox1.Location = new System.Drawing.Point(42, 45);
+			this.checkBox1.Name = "checkBox1";
+			this.checkBox1.Size = new System.Drawing.Size(80, 17);
+			this.checkBox1.TabIndex = 5;
+			this.checkBox1.Text = "checkBox1";
+			this.checkBox1.UseVisualStyleBackColor = true;
 			// 
 			// Form1
 			// 
@@ -188,6 +211,8 @@
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.Label label3;
+		private System.Windows.Forms.CheckBox checkBox1;
+		private System.Windows.Forms.Label label4;
 	}
 }
 

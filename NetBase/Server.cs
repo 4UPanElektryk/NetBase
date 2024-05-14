@@ -13,17 +13,13 @@ namespace NetBase
 {
 	public class Server
 	{
-		private static TcpListener listener;
-		public delegate HttpResponse DataReceived(HTTPRequest request);
+		static SimpleTcpServer _server;
+		public delegate HttpResponse DataReceived(HttpRequest request);
 		public static DataReceived router;
 		public static void Start(IPAddress address, int port)
 		{
 			new Log("Logs\\");
-			listener = new TcpListener(address,port);
-			listener.Start();
-			Thread th = new Thread(new ThreadStart(StartListen));
-			th.Start();
-			/*_server = new SimpleTcpServer
+			_server = new SimpleTcpServer
 			{
 				StringEncoder = Encoding.UTF8,
 				Delimiter = (byte)'\0',
@@ -33,7 +29,7 @@ namespace NetBase
 			{
 				_server.Start(address, port);
 			}
-			catch(Exception ex)
+			catch (Exception ex)
 			{
 				Log.Write($"Startup Error {ex.Message}");
 			}
@@ -45,42 +41,16 @@ namespace NetBase
 			{
 				Log.Write("Server Failed to Start");
 			}
-			*/
+
 		}
-
-		public static void StartListen()
-		{
-			while (true)
-			{
-				//Accept a new connection  
-				Socket mySocket = listener.AcceptSocket();
-				Console.WriteLine("Socket Type " + mySocket.SocketType);
-				if (mySocket.Connected)
-				{
-					Console.WriteLine("\nClient Connected!!\n==================\n  CLient IP { 0}\n", mySocket.RemoteEndPoint) ;  
-					//make a byte array and receive data from the client   
-					Byte[] bReceive = new Byte[1048576];
-					int i = mySocket.Receive(bReceive, bReceive.Length, 0);
-					//Convert Byte to String  
-					string sBuffer = Encoding.ASCII.GetString(bReceive);
-					HTTPRequest d = HTTPRequest.Parse(sBuffer);
-                    foreach (var item in d.Headers)
-                    {
-                        Console.WriteLine(item);
-                    }
-
-                }
-			}
-		}
-
 		private static void Server_DataReceived(object sender, Message e)
 		{
 			Dictionary<string, long> timings = new Dictionary<string, long>();
 			Stopwatch sw = Stopwatch.StartNew();
 			HttpRequest r = HttpRequest.Parse(e.MessageString);
-			sw.Stop();timings.Add("RequestParse",sw.ElapsedMilliseconds);
+			sw.Stop(); timings.Add("RequestParse", sw.ElapsedMilliseconds);
 			HttpResponse response;
-			if (StaticRouting.Router.IsStatic(r)) 
+			if (StaticRouting.Router.IsStatic(r))
 			{
 				sw.Restart();
 				response = StaticRouting.Router.Respond(r);
@@ -109,7 +79,7 @@ namespace NetBase
 						$"</body></html>",
 						ContentType.text_html
 					);
-					Log.Incident(ex,e.MessageString);
+					Log.Incident(ex, e.MessageString);
 				}
 				if (response.Body == "" && (int)response.Status >= 400)
 				{
