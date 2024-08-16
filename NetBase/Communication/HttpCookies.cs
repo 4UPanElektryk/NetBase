@@ -4,6 +4,11 @@ namespace NetBase.Communication
 	public class HttpCookies
 	{
 		private Dictionary<string, string> Cookies;
+		public string this[string name] 
+		{ 
+			get { return Get(name); } 
+			set { Set(name, value); } 
+		}
 		public HttpCookies() 
 		{ 
 			Cookies = new Dictionary<string, string>();
@@ -32,12 +37,13 @@ namespace NetBase.Communication
 		}
 		public string[] ExportCookies()
 		{
-			List<string> output = new List<string>();
+			string[] strings = new string[Cookies.Count];
+			int i = 0;
 			foreach (var item in Cookies)
 			{
-				output.Add($"{item.Key}={item.Value}");
+				strings[i++] = item.Key + "=" + item.Value;
 			}
-			return output.ToArray();
+			return strings;
 		}
 	}
 }
