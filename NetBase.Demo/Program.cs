@@ -14,7 +14,7 @@ namespace NetBase.Demo
 		{
 			Server.router = Funcrouter;
 			Server.Start(System.Net.IPAddress.Loopback,8080);
-			IFileLoader lo = /*new SingularFSFileLoader("docs.fs_");*/ new LocalFileLoader("docs" + Path.DirectorySeparatorChar);
+			IFileLoader lo = /*new SingularFSFileLoader("docs.fs_");*/ new LocalFileLoader("Docs" + Path.DirectorySeparatorChar);
 			new nt.Components.TComponentManager(lo);
 			new nt.Pages.PageManager(lo);
 			new nt.Layouts.LayoutManager(lo);
