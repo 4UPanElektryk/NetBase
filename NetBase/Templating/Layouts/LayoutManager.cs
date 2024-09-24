@@ -47,8 +47,13 @@ namespace NetBase.Templating.Layouts
 			}
 			Dictionary<string, string> dict = p.PageData.ToDictionary(entry => entry.Key, entry => entry.Value);
 			dict.Add("page", p.Use(elements, provider));
+			Dictionary<string, DataProvider> d = null;
+			if (lt.LayoutData.ContainsKey("LinkElement"))
+			{
+				d = new Dictionary<string, DataProvider> { { lt.LayoutData["LinkElement"], pr } };
+			}
 			return lt.Use(
-				new Dictionary<string, DataProvider> { { lt.LayoutData["LinkElement"], pr } },
+				d,
 				dict
 			);
 		}
