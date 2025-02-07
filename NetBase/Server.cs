@@ -80,6 +80,9 @@ namespace NetBase
 						ContentType.text_html
 					);
 					Log.Incident(ex, e.MessageString);
+#if DEBUG
+					throw ex;
+#endif
 				}
 				if (response.Body == "" && (int)response.Status >= 400)
 				{
