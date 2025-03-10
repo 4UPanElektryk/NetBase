@@ -5,6 +5,6 @@
 ## Found a bug?
 Help us fix it!
 
-[Open a new issue](https://github.com/4UPanElektryk/NetBase/issues/new) with the descryption to your problem.
+[Open a new issue](https://github.com/4UPanElektryk/NetBase/issues/new) with a description of your problem.
 
 Remember to include screenshots!
