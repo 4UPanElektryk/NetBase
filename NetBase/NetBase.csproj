@@ -62,12 +62,10 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="SimpleTCP">
-      <HintPath>..\packages\SimpleTCP.1.0.24\lib\net45\SimpleTCP.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Communication\ContentType.cs" />
+    <Compile Include="Communication\HttpCookie.cs" />
     <Compile Include="Communication\HttpMethod.cs" />
     <Compile Include="Communication\HttpCookies.cs" />
     <Compile Include="Communication\HttpRequest.cs" />

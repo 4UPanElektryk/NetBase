@@ -2,9 +2,14 @@
 {
 	public enum HttpMethod
 	{
+		OPTIONS,
 		GET,
+		HEAD,
 		POST,
 		PUT,
-		DELETE
+		DELETE,
+		TRACE,
+		CONNECT,
+		PATCH
 	}
 }

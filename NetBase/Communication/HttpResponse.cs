@@ -7,11 +7,13 @@ namespace NetBase.Communication
 	public class HttpResponse
 	{
 		public StatusCode Status;
-		public ContentType contentType;
+		public string contentType;
 		public HttpCookies Cookies;
-		public Dictionary<string,string> Headers;
-		public string Body;
-		public HttpResponse(StatusCode status, HttpCookies cookies = null, string body = "", ContentType contenttype = ContentType.text_plain)
+		public Dictionary<string, string> Headers;
+		public Encoding ContentEncoding = null;
+		public byte[] Content;
+		public string Body { set { Content = ContentEncoding.GetBytes(value); } }
+		public HttpResponse(StatusCode status, string body, HttpCookies cookies = null, Encoding encoding = null, ContentType contenttype = ContentType.text_plain)
 		{
 			Status = status;
 			if (cookies == null)
@@ -20,33 +22,36 @@ namespace NetBase.Communication
 			}
 			Cookies = cookies;
 			Headers = new Dictionary<string, string>();
-			contentType = contenttype;
-			Body = body;
+			contentType = Enum.GetName(typeof(ContentType), (int)contenttype).Replace("_", "/"); ;
+			if (encoding == null && body != null)
+			{
+				encoding = Encoding.UTF8;
+			}
+			Content = encoding.GetBytes(body);
+			ContentEncoding = encoding;
 		}
-
-		public override string ToString()
+		public HttpResponse(StatusCode status, byte[] content, HttpCookies cookies = null, string contenttype = "", Encoding encoding = null)
+		{ 
+			Status = status;
+			if (cookies == null)
+			{
+				cookies = new HttpCookies();
+			}
+			Cookies = cookies;
+			Headers = new Dictionary<string, string>();
+			contentType = contenttype;
+		}
+		public HttpResponse(StatusCode status, HttpCookies cookies = null)
 		{
-			Dictionary<string,string> respheaders = Headers;
-			string reasonPhrase = Enum.GetName(typeof(StatusCode), (int)Status).Replace("_", " ");
-			string contType = Enum.GetName(typeof(ContentType), (int)contentType).Replace("_", "/");
-            if (contType.Contains("text"))
+			Status = status;
+			if (cookies == null)
 			{
-				respheaders.Add("Content-Type", $"{contType}; charset=UTF-8");
+				cookies = new HttpCookies();
 			}
-			else
-			{
-				respheaders.Add("Content-Type", contType);
-			}
-			respheaders.Add("Cache-Control", "no-cache");
-			respheaders.Add("Content-Length", Encoding.UTF8.GetByteCount(Body).ToString());
-			string response = $"HTTP/1.1 {(int)Status} {reasonPhrase}\r\n";
-			foreach (var item in respheaders) {response += $"{item.Key}: {item.Value}\r\n";}
-			if (Cookies.ExportCookies().Length != 0)
-			{
-				foreach (var item in Cookies.ExportCookies()){response += $"Set-Cookie: {item}; Path=/\r\n";}
-			}
-			response += $"\r\n{Body}\r\n";
-			return response;
+			Cookies = cookies;
+			Headers = new Dictionary<string, string>();
+			Content = null;
+			ContentEncoding = null;
 		}
 	}
 }

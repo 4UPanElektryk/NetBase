@@ -1,30 +1,53 @@
 ﻿using System.Collections.Generic;
+using System.Net;
 namespace NetBase.Communication
 {
 	public class HttpCookies
 	{
-		private Dictionary<string, string> Cookies;
-		public string this[string name] 
+		private List<HttpCookie> Cookies;
+		//private Dictionary<string, string> Cookies;
+		public HttpCookie this[string name] 
 		{ 
 			get { return Get(name); } 
-			set { Set(name, value); } 
+			set { Set(name, value.Value); } 
 		}
 		public HttpCookies() 
 		{ 
-			Cookies = new Dictionary<string, string>();
+			Cookies = new List<HttpCookie>();
 		}
-		public string Get(string key)
+		public HttpCookie Get(string key)
 		{
-			if (!Cookies.ContainsKey(key)) { return null; }
-			return Cookies[key];
+			return Cookies.Find((x) => x.Key == key);
 		}
-		public void Set(string key, string value)
+		public string GetValue(string key)
 		{
-			if (Cookies.ContainsKey(key))
+			HttpCookie c = Cookies.Find((x) => x.Key == key);
+			if (c != null)
 			{
-				Cookies.Remove(key);
+				return c.Value;
 			}
-			Cookies.Add(key,value);
+			return "";
+		}
+		public void Set(string key, string value, string path = "/")
+		{
+			HttpCookie c = Cookies.Find((x) => x.Key == key);
+			if (c != null)
+			{
+				Cookies.Remove(c);
+			}
+			else
+			{
+				c = new HttpCookie(key, value, path);
+			}
+			c.Value = value;
+			Cookies.Add(c);
+		}
+		public void ImportCookies(CookieCollection collection)
+		{
+			foreach (Cookie c in collection)
+			{
+				Cookies.Add(new HttpCookie(c.Name, c.Value, c.Path));
+			}
 		}
 		public void ImportCookies(string data)
 		{
@@ -32,18 +55,18 @@ namespace NetBase.Communication
 			foreach (string s in sd) 
 			{
 				string[] d = s.Split('=');
-				Cookies.Add(d[0], d[1]);
+
+				Cookies.Add(new HttpCookie(d[0], d[1]));
 			}
 		}
-		public string[] ExportCookies()
+		public CookieCollection ExportCookies()
 		{
-			string[] strings = new string[Cookies.Count];
-			int i = 0;
+			CookieCollection cookies = new CookieCollection();
 			foreach (var item in Cookies)
 			{
-				strings[i++] = item.Key + "=" + item.Value;
+				cookies.Add(new Cookie(item.Key, item.Value, item.Path));
 			}
-			return strings;
+			return cookies;
 		}
 	}
 }

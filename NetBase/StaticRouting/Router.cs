@@ -168,7 +168,7 @@ namespace NetBase.StaticRouting
 		{
 			if (PagesRoutingTable.ContainsKey(request.Url))
 			{
-				return new HttpResponse(StatusCode.OK, null, PageManager.GetPagePlain(PagesRoutingTable[request.Url]), ContentType.text_html);
+				return new HttpResponse(StatusCode.OK, PageManager.GetPagePlain(PagesRoutingTable[request.Url]), null, Encoding.UTF8, ContentType.text_html);
 			}
 			Rout r = GetRout(request);
 			ContentType type = ContentType.text_plain;
@@ -176,19 +176,23 @@ namespace NetBase.StaticRouting
 			if (lookupTable.ContainsKey(ext)) {type = lookupTable[ext];}
 			try
 			{
-				return new HttpResponse(StatusCode.OK, null, r.loader.Load(r.LocalPath), type);
+				return new HttpResponse(StatusCode.OK, r.loader.Load(r.LocalPath), null, Encoding.UTF8, type);
 			}
 			catch (Exception ex)
 			{
 				Log.Incident(ex);
 				if(ex is FileNotFoundException)
 				{
-					return new HttpResponse(StatusCode.Not_Found, null, 
+					return new HttpResponse(
+						StatusCode.Not_Found, 
 						$"<html><head><title>File was not found</title></head>" +
 						$"<body><h1>File was not found by Router</h1>" +
 						$"<p>Local File: \"{r.LocalPath}\"</p>" +
 						$"<hr><center><a href=\"https://github.com/4UPanElektryk/NetBase\">NetBase</a></center>" +
-						$"</body></html>", ContentType.text_html);
+						$"</body></html>", 
+						null, 
+						Encoding.UTF8, 
+						ContentType.text_html);
 				}
 				throw ex;
 			}
