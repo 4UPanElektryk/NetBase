@@ -1,15 +1,14 @@
-﻿using System;
+﻿using SingularFS;
+using System;
 using System.Collections.Generic;
-using System.IO;
-using SingularFS;
 
 namespace NetBase.FileProvider
 {
 	public class SingularFSFileLoader : IFileLoader
 	{
 		private readonly FS fs;
-		public SingularFSFileLoader(string path) 
-		{ 
+		public SingularFSFileLoader(string path)
+		{
 			fs = FSMod.Import(path);
 		}
 		public string Load(string path)
@@ -25,7 +24,7 @@ namespace NetBase.FileProvider
 		{
 			List<string> files = new List<string>();
 			fs.files.ForEach(f => { files.Add(f.FileName); });
-			return files.ToArray(); 
+			return files.ToArray();
 		}
 
 	}

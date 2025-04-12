@@ -1,5 +1,4 @@
-﻿using System;
-using NetBase.FileProvider;
+﻿using NetBase.FileProvider;
 namespace NetBase.Templating.Layouts
 {
 	public class ImportableLayout : Layout

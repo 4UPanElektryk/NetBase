@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net;
 namespace NetBase.Communication
@@ -11,8 +10,9 @@ namespace NetBase.Communication
 		public Dictionary<string, string> URLParamenters;
 		public string HTTPVersion;
 		public HttpMethod Method;
-		public Dictionary<string,string> Headers;
-		public Dictionary<string,string> PostData;
+		public Dictionary<string, string> Headers;
+		public Dictionary<string, string> PostData;
+		//public string 
 		public HttpCookies Cookies;
 		public string body;
 		public HttpRequest()
@@ -118,7 +118,7 @@ namespace NetBase.Communication
 			}
 			request.Cookies = new HttpCookies();
 			request.Cookies.ImportCookies(data.Cookies);
-			if (request.Method == HttpMethod.POST)
+			if (request.Method == HttpMethod.POST && request.Headers.ContainsKey("Content-Type") && request.Headers["Content-Type"] == "application/x-www-form-urlencoded")
 			{
 				request.PostData = GetRequestPostData(data)
 					.Split('&')

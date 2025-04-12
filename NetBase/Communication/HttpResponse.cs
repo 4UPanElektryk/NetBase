@@ -31,7 +31,7 @@ namespace NetBase.Communication
 			ContentEncoding = encoding;
 		}
 		public HttpResponse(StatusCode status, byte[] content, HttpCookies cookies = null, string contenttype = "", Encoding encoding = null)
-		{ 
+		{
 			Status = status;
 			if (cookies == null)
 			{

@@ -4,12 +4,9 @@ using NetBase.RuntimeLogger;
 using NetBase.Templating.Pages;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace NetBase.StaticRouting
 {
@@ -61,7 +58,7 @@ namespace NetBase.StaticRouting
 				else if (line.Contains("="))
 				{
 					d.Add(
-						line.Split('=')[0], 
+						line.Split('=')[0],
 						line.Substring(
 							line.Split('=')[0].Length + 1).Trim("\t\r".ToCharArray()
 						)
@@ -83,7 +80,7 @@ namespace NetBase.StaticRouting
 			foreach (var item in data["defaultRoutes"].Split('\n'))
 			{
 				string pitem = item.Trim("\t\r ".ToCharArray());
-				Add(loader,pitem, prefix + pitem);
+				Add(loader, pitem, prefix + pitem);
 			}
 		}
 		public static void Add(IFileLoader loader, string LocalPath, string Url = null, Func<HttpRequest, bool> Overrdide = null)
@@ -107,13 +104,14 @@ namespace NetBase.StaticRouting
 			Console.WriteLine($"Checking Rout ({r.Url})");
 			Console.ResetColor();
 #endif
-			if (r.Method != HttpMethod.GET) {
+			if (r.Method != HttpMethod.GET)
+			{
 #if DEBUG
 				Console.ForegroundColor = ConsoleColor.Red;
 				Console.WriteLine($"Routing not met for using diffrent method ({r.Method})");
 				Console.ResetColor();
 #endif
-				return false; 
+				return false;
 			}
 			foreach (var rout in RoutingTable)
 			{
@@ -153,9 +151,9 @@ namespace NetBase.StaticRouting
 #endif
 			return false;
 		}
-		private static Rout GetRout(HttpRequest r) 
-		{ 
-			foreach (var rout in RoutingTable) 
+		private static Rout GetRout(HttpRequest r)
+		{
+			foreach (var rout in RoutingTable)
 			{
 				if (rout.ServerPath == r.Url)
 				{
@@ -163,8 +161,8 @@ namespace NetBase.StaticRouting
 				}
 			}
 			throw new NotImplementedException("This should be imposible becouse this already checks if file is routed via this");
-		} 
-		public static HttpResponse Respond(HttpRequest request) 
+		}
+		public static HttpResponse Respond(HttpRequest request)
 		{
 			if (PagesRoutingTable.ContainsKey(request.Url))
 			{
@@ -173,7 +171,7 @@ namespace NetBase.StaticRouting
 			Rout r = GetRout(request);
 			ContentType type = ContentType.text_plain;
 			string ext = r.LocalPath.Split('.').Last();
-			if (lookupTable.ContainsKey(ext)) {type = lookupTable[ext];}
+			if (lookupTable.ContainsKey(ext)) { type = lookupTable[ext]; }
 			try
 			{
 				return new HttpResponse(StatusCode.OK, r.loader.Load(r.LocalPath), null, Encoding.UTF8, type);
@@ -181,17 +179,17 @@ namespace NetBase.StaticRouting
 			catch (Exception ex)
 			{
 				Log.Incident(ex);
-				if(ex is FileNotFoundException)
+				if (ex is FileNotFoundException)
 				{
 					return new HttpResponse(
-						StatusCode.Not_Found, 
+						StatusCode.Not_Found,
 						$"<html><head><title>File was not found</title></head>" +
 						$"<body><h1>File was not found by Router</h1>" +
 						$"<p>Local File: \"{r.LocalPath}\"</p>" +
 						$"<hr><center><a href=\"https://github.com/4UPanElektryk/NetBase\">NetBase</a></center>" +
-						$"</body></html>", 
-						null, 
-						Encoding.UTF8, 
+						$"</body></html>",
+						null,
+						Encoding.UTF8,
 						ContentType.text_html);
 				}
 				throw ex;

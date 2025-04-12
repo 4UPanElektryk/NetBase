@@ -6,7 +6,7 @@ namespace NetBase.Templating.Components
 	{
 		public ImportableComponent(string name, IFileLoader loader) : base(name)
 		{
-			this.component  = loader.Load(name);
+			this.component = loader.Load(name);
 		}
 	}
 }

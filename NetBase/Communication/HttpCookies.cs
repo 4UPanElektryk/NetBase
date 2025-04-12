@@ -6,13 +6,13 @@ namespace NetBase.Communication
 	{
 		private List<HttpCookie> Cookies;
 		//private Dictionary<string, string> Cookies;
-		public HttpCookie this[string name] 
-		{ 
-			get { return Get(name); } 
-			set { Set(name, value.Value); } 
+		public HttpCookie this[string name]
+		{
+			get { return Get(name); }
+			set { Set(name, value.Value); }
 		}
-		public HttpCookies() 
-		{ 
+		public HttpCookies()
+		{
 			Cookies = new List<HttpCookie>();
 		}
 		public HttpCookie Get(string key)
@@ -51,8 +51,8 @@ namespace NetBase.Communication
 		}
 		public void ImportCookies(string data)
 		{
-			string[] sd = data.Contains("&") ? data.Split('&'): new string[] { data };
-			foreach (string s in sd) 
+			string[] sd = data.Contains("&") ? data.Split('&') : new string[] { data };
+			foreach (string s in sd)
 			{
 				string[] d = s.Split('=');
 

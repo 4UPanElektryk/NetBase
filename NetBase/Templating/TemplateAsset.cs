@@ -1,5 +1,4 @@
-﻿using System;
-namespace NetBase.Templating
+﻿namespace NetBase.Templating
 {
 	public interface TemplateAsset
 	{

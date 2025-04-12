@@ -1,7 +1,7 @@
-﻿using System;
-using NetBase.FileProvider;
-using System.Collections.Generic;
+﻿using NetBase.FileProvider;
 using NetBase.Templating.Pages;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 namespace NetBase.Templating.Layouts
 {
@@ -31,16 +31,16 @@ namespace NetBase.Templating.Layouts
 				}
 			}
 		}
-		public static string UseLayout(Page p,Dictionary<string,DataProvider> elements = null, Dictionary<string,string> provider = null)
+		public static string UseLayout(Page p, Dictionary<string, DataProvider> elements = null, Dictionary<string, string> provider = null)
 		{
 			Layout lt = Layouts.Find((obj) => obj.AssetName == p.LayoutName);
 			DataProvider pr = new DataProvider();
-            foreach (var item in LayoutsPages[p.LayoutName])
+			foreach (var item in LayoutsPages[p.LayoutName])
 			{
 				if (item.PageData.ContainsKey("Visible") && bool.Parse(item.PageData["Visible"]))
 				{
-                    Console.WriteLine(item.AssetName);
-                    Dictionary <string, string> temp = item.PageData.ToDictionary(entry => entry.Key,entry => entry.Value);
+					Console.WriteLine(item.AssetName);
+					Dictionary<string, string> temp = item.PageData.ToDictionary(entry => entry.Key, entry => entry.Value);
 					temp.Add("Active", item.AssetName == p.AssetName ? lt.LayoutData["ActiveElementValue"] : "");
 					pr.Add(temp);
 				}

@@ -1,15 +1,11 @@
-﻿using System;
-using System.Text;
-using NetBase.Communication;
+﻿using NetBase.Communication;
 using NetBase.RuntimeLogger;
-using System.Net;
-using System.Net.Sockets;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Net;
+using System.Text;
 using System.Threading;
-using System.IO;
-using System.Runtime.Remoting.Messaging;
-using System.Threading.Tasks;
 
 namespace NetBase
 {
@@ -21,15 +17,15 @@ namespace NetBase
 		public bool IsRunning { get { return _isRunning; } }
 		public delegate HttpResponse DataReceived(HttpRequest request);
 		//public event EventLogEntry OnDataReceived;
-		public DataReceived router;
-		
+		public DataReceived HandeRequest;
+
 		public void Start(IPAddress address, int port)
 		{
 			new Log("Logs\\");
 			listener = new HttpListener();
 			listener.Prefixes.Add($"http://{address}:{port}/");
 			_isRunning = true;
-			
+
 			try
 			{
 				listener.Start();
@@ -93,7 +89,7 @@ namespace NetBase
 				sw.Restart();
 				try
 				{
-					response = router.Invoke(r);
+					response = HandeRequest.Invoke(r);
 				}
 				catch (Exception ex)
 				{

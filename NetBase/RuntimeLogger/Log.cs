@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using NetBase.Communication;
 
 namespace NetBase.RuntimeLogger
 {
@@ -19,7 +18,7 @@ namespace NetBase.RuntimeLogger
 			}
 			if (!File.Exists(Dir + "Latest.Log"))
 			{
-				File.WriteAllText(Dir + "Latest.Log","");
+				File.WriteAllText(Dir + "Latest.Log", "");
 			}
 			string Time = DateTime.UtcNow.ToString("dd.MM.yyyy - HH:mm:ss:FFF");
 			string ToWrite = $"{Time}|{input}\n";

@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using NetBase.StaticRouting;
+﻿using NetBase.StaticRouting;
 using NetBase.Templating.Components;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace NetBase.Templating.Pages
 {
@@ -17,7 +17,7 @@ namespace NetBase.Templating.Pages
 			AssetName = name;
 		}
 		// Component would be with {$name.comp$}
-		public string Use(Dictionary<string,DataProvider> elements = null, Dictionary<string, string> provider = null)
+		public string Use(Dictionary<string, DataProvider> elements = null, Dictionary<string, string> provider = null)
 		{
 			Regex components = new Regex(@"\{\$(\w+.\w+)\$\}", RegexOptions.Compiled);
 			Regex data = new Regex(@"\$(\w+)\$", RegexOptions.Compiled);

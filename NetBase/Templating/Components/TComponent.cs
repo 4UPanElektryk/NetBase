@@ -15,11 +15,12 @@ namespace NetBase.Templating.Components
 		{
 			Regex re = new Regex(@"\$(\w+)\$", RegexOptions.Compiled);
 			string ret = "";
-			provider?.ForEach(r => { 
-					ret += re.Replace(component, match => r.ContainsKey(match.Groups[1].Value) ? r[match.Groups[1].Value] : $"<!-- ?missing \"{match.Groups[1].Value}\" -->"); 
-				});
-			if (provider == null) 
-			{ 
+			provider?.ForEach(r =>
+			{
+				ret += re.Replace(component, match => r.ContainsKey(match.Groups[1].Value) ? r[match.Groups[1].Value] : $"<!-- ?missing \"{match.Groups[1].Value}\" -->");
+			});
+			if (provider == null)
+			{
 				return re.Replace(component, match => "");
 			}
 			return ret;

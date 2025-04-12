@@ -6,15 +6,15 @@ namespace NetBase.FileProvider
 	public class LocalFileLoader : IFileLoader
 	{
 		readonly string directory;
-		public LocalFileLoader(string directory) 
-		{ 
+		public LocalFileLoader(string directory)
+		{
 			this.directory = directory.Replace('\\', Path.DirectorySeparatorChar);
 		}
 		public string Load(string path)
 		{
 #if DEBUG
 			Console.ForegroundColor = ConsoleColor.Blue;
-            Console.WriteLine("Reading: " + directory + path);
+			Console.WriteLine("Reading: " + directory + path);
 			Console.ResetColor();
 #endif
 			return File.ReadAllText(directory + path);

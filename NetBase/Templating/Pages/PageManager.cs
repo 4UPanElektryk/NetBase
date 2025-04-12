@@ -1,5 +1,4 @@
 ﻿using NetBase.FileProvider;
-using NetBase.Templating.Components;
 using System.Collections.Generic;
 
 namespace NetBase.Templating.Pages
@@ -7,7 +6,7 @@ namespace NetBase.Templating.Pages
 	public class PageManager
 	{
 		private static List<Page> Pages = new List<Page>();
-		public PageManager(IFileLoader loader) 
+		public PageManager(IFileLoader loader)
 		{
 			foreach (string item in loader.GetFiles())
 			{
@@ -28,7 +27,8 @@ namespace NetBase.Templating.Pages
 			}
 			return new Page("Dummy") { Component = $"Missing File \"{name}\" \n" };
 		}
-		public static string GetPagePlain(string name){
+		public static string GetPagePlain(string name)
+		{
 			foreach (Page page in Pages)
 			{
 				if (page.AssetName == name)

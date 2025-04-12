@@ -1,5 +1,4 @@
 ﻿using NetBase.FileProvider;
-using System.Collections.Generic;
 
 namespace NetBase.Templating.Pages
 {
