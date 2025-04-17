@@ -39,6 +39,7 @@ namespace NetBase.Communication
 			}
 			Cookies = cookies;
 			Headers = new Dictionary<string, string>();
+			ContentEncoding = encoding;
 			contentType = contenttype;
 		}
 		public HttpResponse(StatusCode status, HttpCookies cookies = null)
