@@ -99,7 +99,7 @@ namespace NetBase.Communication
 			{
 				if (data.Url.Query.Contains("&"))
 				{
-					foreach (var item in data.Url.Query.Split('&'))
+					foreach (var item in data.Url.Query.TrimStart('?').Split('&'))
 					{
 						request.URLParamenters.Add(
 							item.Split('=')[0],
@@ -109,7 +109,7 @@ namespace NetBase.Communication
 				}
 				else
 				{
-					string item = data.Url.Query;
+					string item = data.Url.Query.TrimStart('?');
 					request.URLParamenters.Add(
 						item.Split('=')[0],
 						Uri.UnescapeDataString(item.Split('=')[1])
