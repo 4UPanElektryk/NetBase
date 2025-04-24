@@ -18,12 +18,11 @@ namespace NetBase
 		public delegate HttpResponse DataReceived(HttpRequest request);
 		//public event EventLogEntry OnDataReceived;
 		public DataReceived HandeRequest;
-
-		public void Start(IPAddress address, int port)
+		public void Start(string prefix)
 		{
 			new Log("Logs\\");
 			listener = new HttpListener();
-			listener.Prefixes.Add($"http://{address}:{port}/");
+			listener.Prefixes.Add(prefix);
 			_isRunning = true;
 
 			try
@@ -32,19 +31,33 @@ namespace NetBase
 				thread = new Thread(ListenerThread);
 				thread.Start();
 			}
+			catch (HttpListenerException htle)
+			{
+				Log.Write($"Internall Startup Error! {htle.Message}! (If possible please create a github issue)");
+				throw htle;
+			}
 			catch (Exception ex)
 			{
 				Log.Write($"Startup Error {ex.Message}");
+				throw ex;
 			}
-			if (IsRunning)
+			finally
 			{
-				Log.Write($"Server Started on http://{address}:{port}/");
+				if (listener.IsListening)
+				{
+					Log.Write($"Server Started on {prefix}");
+				}
+				else
+				{
+					Log.Write($"Server Failed to Start on {prefix}");
+					_isRunning = false;
+				}
 			}
-			else
-			{
-				Log.Write("Server Failed to Start");
-			}
+		}
 
+		public void Start(IPAddress address, int port)
+		{
+			Start($"http://{address}:{port}/");
 		}
 		public void Stop()
 		{
