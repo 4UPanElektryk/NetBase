@@ -1,6 +1,6 @@
 # ⚠️ Breaking Changes: HttpListener Migration
 
-NetBase has recently transitioned from `SimpleTCP` to `HttpListener` to improve compatibility beyond localhost.
+NetBase has recently transitioned from `SimpleTCP` to `HttpListener` to improve compatibility.
 
 To run NetBase outside your local machine, you'll need to configure your system to allow external access. Follow these steps:
 
