@@ -1,30 +1,18 @@
 ![NetBase](https://github.com/4UPanElektryk/NetBase/assets/80508394/c341fbed-818b-407f-940e-b246c5c6a6da)
+
 # NetBase
-## NetBase is a simple framework for developing websites
 
-## Found a bug?
-Help us fix it!
+**NetBase** is a lightweight and straightforward framework designed for building websites with ease.
 
-[Open a new issue](https://github.com/4UPanElektryk/NetBase/issues/new) with a description of your problem.
+## 🐞 Found a Bug?
 
-Remember to include screenshots!
+We'd love your help making NetBase better!
 
-### Caution!
-Due to a recent refactor from SimpleTCP to HttpListener to use them outside of your local machine youll need to run the following comands depending on your port
+- [Open a new issue](https://github.com/4UPanElektryk/NetBase/issues/new)
+- Provide a clear description of the issue.
+- Include screenshots if possible.
 
-in powershell as admin
-```pwsh
-$port = 8080
-
-New-NetFirewallRule -DisplayName "Allow Port $port" `
-                    -Direction Inbound `
-                    -Protocol TCP `
-                    -LocalPort $port `
-                    -Action Allow
-```
-
-and to allow to connect you'll need also to run cmd as admin
-
-```cmd
-netsh http add urlacl url=http://+:{port_here}/ user=Everyone
-```
+>[!Important]
+>
+>We've recently refactored the project to use `HttpListener` instead of `SimpleTCP`.
+>If you're running NetBase outside of your local machine, please check the [Breaking Changes](BREAKING_CHANGES.md) page for important setup instructions.
