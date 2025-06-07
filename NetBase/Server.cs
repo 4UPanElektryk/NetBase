@@ -109,6 +109,7 @@ namespace NetBase
 					response = new HttpResponse(
 						StatusCode.Internal_Server_Error,
 						$"<html><head>" +
+						$"<meta charset=\"UTF-8\">" +
 						$"<title>500 Internal Server Error</title>" +
 						$"</head><body>" +
 						$"<h1><center>500 Internal Server Error</center></h1>" +
