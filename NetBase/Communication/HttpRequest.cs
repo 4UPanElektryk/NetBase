@@ -14,7 +14,7 @@ namespace NetBase.Communication
 		public Dictionary<string, string> PostData;
 		//public string 
 		public HttpCookies Cookies;
-		public string body;
+		public string Body;
 		public HttpRequest()
 		{
 			URLParamenters = new Dictionary<string, string>();
@@ -131,7 +131,7 @@ namespace NetBase.Communication
 			{
 				request.PostData = new Dictionary<string, string>();
 			}
-			request.body = GetRequestPostData(data);
+			request.Body = GetRequestPostData(data);
 			return request;
 		}
 		private static string GetRequestPostData(HttpListenerRequest request)
