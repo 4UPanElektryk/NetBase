@@ -18,13 +18,15 @@ namespace NetBase
 		public delegate HttpResponse DataReceived(HttpRequest request);
 		//public event EventLogEntry OnDataReceived;
 		public DataReceived HandeRequest;
-		public void Start(string prefix)
+		public Server()
 		{
 			new Log("Logs\\");
 			listener = new HttpListener();
+		}
+		public void Start(string prefix)
+		{
 			listener.Prefixes.Add(prefix);
 			_isRunning = true;
-
 			try
 			{
 				listener.Start();
