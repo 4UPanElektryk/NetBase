@@ -1,7 +1,6 @@
 ﻿using NetBase.Communication;
 using NetBase.FileProvider;
-using NetBase.RuntimeLogger;
-using NetBase.Templating.Pages;
+using NetBase.Runtime;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -23,9 +22,11 @@ namespace NetBase.StaticRouting
 			{ "pdf", ContentType.application_pdf },
 
 		};
-		public static List<Rout> RoutingTable = new List<Rout>();
+		public static List<RouterEntry> RoutingTable = new List<RouterEntry>();
+
+		// Deprecated in favor of PageManager and NetBase.Templating
 		//key is url and value is pagefile name
-		public static Dictionary<string, string> PagesRoutingTable = new Dictionary<string, string>();
+		//public static Dictionary<string, string> PagesRoutingTable = new Dictionary<string, string>();
 		private static Dictionary<string, string> ParseData(string data)
 		{
 			Dictionary<string, string> d = new Dictionary<string, string>();
@@ -89,7 +90,7 @@ namespace NetBase.StaticRouting
 				throw new ArgumentNullException(nameof(loader));
 			if (Url == null)
 				Url = LocalPath;
-			RoutingTable.Add(new Rout()
+			RoutingTable.Add(new RouterEntry()
 			{
 				loader = loader,
 				LocalPath = LocalPath,
@@ -151,7 +152,14 @@ namespace NetBase.StaticRouting
 #endif
 			return false;
 		}
-		private static Rout GetRout(HttpRequest r)
+
+		public HttpResponse OnRequest(HttpRequest r)
+		{
+			return Respond(r);
+		}
+
+		// Old routing system, deprecated in favor of Dynamic routing via cascading requests
+		private static RouterEntry GetRout(HttpRequest r)
 		{
 			foreach (var rout in RoutingTable)
 			{
@@ -166,9 +174,9 @@ namespace NetBase.StaticRouting
 		{
 			if (PagesRoutingTable.ContainsKey(request.Url))
 			{
-				return new HttpResponse(StatusCode.OK, PageManager.GetPagePlain(PagesRoutingTable[request.Url]), null, Encoding.UTF8, ContentType.text_html);
+				//return new HttpResponse(StatusCode.OK, PageManager.GetPagePlain(PagesRoutingTable[request.Url]), null, Encoding.UTF8, ContentType.text_html);
 			}
-			Rout r = GetRout(request);
+			RouterEntry r = GetRout(request);
 			ContentType type = ContentType.text_plain;
 			string ext = r.LocalPath.Split('.').Last();
 			if (lookupTable.ContainsKey(ext)) { type = lookupTable[ext]; }

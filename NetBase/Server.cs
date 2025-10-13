@@ -1,5 +1,6 @@
 ﻿using NetBase.Communication;
-using NetBase.RuntimeLogger;
+using NetBase.Runtime;
+using NetBase.StaticRouting;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -11,47 +12,52 @@ namespace NetBase
 {
 	public class Server
 	{
-		private HttpListener listener;
+		private HttpListener _listener;
 		private bool _isRunning = false;
 		private Thread thread = null;
 		public bool IsRunning { get { return _isRunning; } }
 		public delegate HttpResponse DataReceived(HttpRequest request);
-		//public event EventLogEntry OnDataReceived;
+		public Router router;
 		public DataReceived HandeRequest;
-		public Server()
+		private Log log;
+		public Server(string serverLogPath = null)
 		{
-			new Log("Logs\\");
-			listener = new HttpListener();
+			if (serverLogPath == null)
+			{
+
+			}
+			log = new Log("Logs\\");
+			_listener = new HttpListener();
 		}
 		public void Start(string prefix)
 		{
-			listener.Prefixes.Add(prefix);
+			_listener.Prefixes.Add(prefix);
 			_isRunning = true;
 			try
 			{
-				listener.Start();
+				_listener.Start();
 				thread = new Thread(ListenerThread);
 				thread.Start();
 			}
 			catch (HttpListenerException htle)
 			{
-				Log.Write($"Internall Startup Error! {htle.Message}! (If possible please create a github issue)");
+				log.Write($"Internall Startup Error! {htle.Message}! (If possible please create a github issue)");
 				throw htle;
 			}
 			catch (Exception ex)
 			{
-				Log.Write($"Startup Error {ex.Message}");
+				log.Write($"Startup Error {ex.Message}");
 				throw ex;
 			}
 			finally
 			{
-				if (listener.IsListening)
+				if (_listener.IsListening)
 				{
-					Log.Write($"Server Started on {prefix}");
+					log.Write($"Server Started on {prefix}");
 				}
 				else
 				{
-					Log.Write($"Server Failed to Start on {prefix}");
+					log.Write($"Server Failed to Start on {prefix}");
 					_isRunning = false;
 				}
 			}
@@ -66,19 +72,19 @@ namespace NetBase
 			if (_isRunning)
 			{
 				_isRunning = false;
-				listener.Stop();
-				Log.Write("Server Stopped");
+				_listener.Stop();
+				log.Write("Server Stopped");
 			}
 			else
 			{
-				Log.Write("Server is not running");
+				log.Write("Server is not running");
 			}
 		}
 		private async void ListenerThread()
 		{
 			while (_isRunning)
 			{
-				HttpListenerContext ctx = await listener.GetContextAsync();
+				HttpListenerContext ctx = await _listener.GetContextAsync();
 
 				HttpListenerRequest req = ctx.Request;
 				HttpListenerResponse res = ctx.Response;
@@ -88,20 +94,24 @@ namespace NetBase
 		}
 		private void OnRequest(HttpListenerRequest Request, HttpListenerResponse hlresponse)
 		{
-			Dictionary<string, long> timings = new Dictionary<string, long>();
-			Stopwatch sw = Stopwatch.StartNew();
+			#region Setup
+			PerformanceDebuger timings = new PerformanceDebuger();
+			timings.Start("RequestParse");
 			HttpRequest r = HttpRequest.Parse(Request);
-			sw.Stop(); timings.Add("RequestParse", sw.ElapsedMilliseconds);
+			timings.Stop();
 			HttpResponse response;
+			#endregion
+
+			#region Routing
 			if (StaticRouting.Router.IsStatic(r))
 			{
-				sw.Restart();
+				timings.Start("StaticRouting");
 				response = StaticRouting.Router.Respond(r);
-				sw.Stop(); timings.Add("StaticRouting", sw.ElapsedMilliseconds);
+				timings.Stop();
 			}
 			else
 			{
-				sw.Restart();
+				timings.Start("DynamicRouting");
 				try
 				{
 					response = HandeRequest.Invoke(r);
@@ -124,8 +134,9 @@ namespace NetBase
 						Encoding.UTF8,
 						ContentType.text_html
 					);
+
 					//TODO reimplement logs
-					Log.Incident(ex, "");
+					log.Incident(ex, "");
 #if DEBUG
 					throw ex;
 #endif
@@ -143,8 +154,10 @@ namespace NetBase
 						$"</body></html>";
 					response.contentType = "text/html";
 				}
-				sw.Stop(); timings.Add("DynamicRouting", sw.ElapsedMilliseconds);
+				timings.Stop();
 			}
+			#endregion
+
 			if (response.Content == null && response.Status == StatusCode.Not_Found)
 			{
 				string ReasonPhrase = Enum.GetName(typeof(StatusCode), (int)response.Status).Replace("_", " ");
@@ -157,12 +170,7 @@ namespace NetBase
 					$"</body></html>";
 				response.contentType = "text/html";
 			}
-			string servertiming = "";
-			foreach (var item in timings)
-			{
-				servertiming += $"{item.Key};dur={item.Value},";
-			}
-			servertiming.TrimEnd(',');
+
 			response.Headers.Add("Server-Timing", servertiming);
 			hlresponse.StatusCode = (int)response.Status;
 			hlresponse.StatusDescription = Enum.GetName(typeof(StatusCode), (int)response.Status).Replace("_", " ");

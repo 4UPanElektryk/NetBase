@@ -4,7 +4,7 @@ using System;
 
 namespace NetBase.StaticRouting
 {
-	public struct Rout
+	public struct RouterEntry
 	{
 		public string LocalPath;
 		public string ServerPath;
