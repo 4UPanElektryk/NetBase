@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using static NetBase.Server;
 
 namespace NetBase.StaticRouting
 {
@@ -22,54 +23,60 @@ namespace NetBase.StaticRouting
 			{ "pdf", ContentType.application_pdf },
 
 		};
-		public static List<RouterEntry> RoutingTable = new List<RouterEntry>();
 
-		// Deprecated in favor of PageManager and NetBase.Templating
-		//key is url and value is pagefile name
-		//public static Dictionary<string, string> PagesRoutingTable = new Dictionary<string, string>();
-		private static Dictionary<string, string> ParseData(string data)
+		public List<RouterEntry> RoutingTable;
+        public DataReceived HandeRequest;
+		public Router()
 		{
-			Dictionary<string, string> d = new Dictionary<string, string>();
-			//! Idon't know why It Works but it works
-			string[] c = data.Split('\n');
-			string lastkey = null;
-			foreach (var linem in c)
-			{
-				string line = linem.Trim("\r".ToCharArray());
-				if (line.StartsWith("#") || line == " ")
-				{
-					// comments go brrr
-				}
-				else if (line.StartsWith("\t") || line.StartsWith("    "))
-				{
-					if (lastkey != null)
-					{
-						string val = d[lastkey];
-						d.Remove(lastkey);
-						if (!(val == " " || val == ""))
-						{
-							d.Add(lastkey, val + "\n" + line.Trim("\t\r ".ToCharArray()));
-						}
-						else
-						{
-							d.Add(lastkey, line.Trim("\t\r ".ToCharArray()));
-						}
-					}
-				}
-				else if (line.Contains("="))
-				{
-					d.Add(
-						line.Split('=')[0],
-						line.Substring(
-							line.Split('=')[0].Length + 1).Trim("\t\r".ToCharArray()
-						)
-					);
-					lastkey = line.Split('=')[0];
-				}
-			}
-			return d;
-		}
-		public static void InitFromINI(IFileLoader loader, string path = "Router.ini")
+			RoutingTable = new List<RouterEntry>();
+        }
+        public HttpResponse OnRequest(HttpRequest request)
+        {
+#if DEBUG
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine($"Checking Rout ({request.Url})");
+            Console.ResetColor();
+#endif
+            if (request.Method != HttpMethod.GET)
+            {
+#if DEBUG
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"Routing not met for using diffrent method ({request.Method})");
+                Console.ResetColor();
+#endif
+                return HandeRequest(request);
+            }
+            foreach (var rout in RoutingTable)
+            {
+                if (rout.ServerPath != request.Url) { continue; }
+                if (rout.OverrideCase == null)
+                {
+#if DEBUG
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine($"Static Rout found ({request.Url})");
+                    Console.ResetColor();
+#endif
+                    return Respond(request,rout);
+                }
+                else if (!rout.OverrideCase(request))
+                {
+#if DEBUG
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine($"Override case not met Rout ({request.Url})");
+                    Console.ResetColor();
+#endif
+                    return Respond(request,rout);
+                }
+            }
+#if DEBUG
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.WriteLine($"Not Static Rout ({request.Url})");
+            Console.ResetColor();
+#endif
+            return HandeRequest(request);
+        }
+        
+		public void InitFromINI(IFileLoader loader, string path = "Router.ini")
 		{
 			Dictionary<string, string> data = ParseData(loader.Load(path));
 			string prefix = "";
@@ -84,7 +91,7 @@ namespace NetBase.StaticRouting
 				Add(loader, pitem, prefix + pitem);
 			}
 		}
-		public static void Add(IFileLoader loader, string LocalPath, string Url = null, Func<HttpRequest, bool> Overrdide = null)
+		public void Add(IFileLoader loader, string LocalPath, string Url = null, Func<HttpRequest, bool> Overrdide = null)
 		{
 			if (loader == null)
 				throw new ArgumentNullException(nameof(loader));
@@ -98,85 +105,11 @@ namespace NetBase.StaticRouting
 				OverrideCase = Overrdide,
 			});
 		}
-		public static bool IsStatic(HttpRequest r)
-		{
-#if DEBUG
-			Console.ForegroundColor = ConsoleColor.Yellow;
-			Console.WriteLine($"Checking Rout ({r.Url})");
-			Console.ResetColor();
-#endif
-			if (r.Method != HttpMethod.GET)
-			{
-#if DEBUG
-				Console.ForegroundColor = ConsoleColor.Red;
-				Console.WriteLine($"Routing not met for using diffrent method ({r.Method})");
-				Console.ResetColor();
-#endif
-				return false;
-			}
-			foreach (var rout in RoutingTable)
-			{
-				if (rout.ServerPath != r.Url) { continue; }
-				if (rout.OverrideCase == null)
-				{
-#if DEBUG
-					Console.ForegroundColor = ConsoleColor.Green;
-					Console.WriteLine($"Static Rout found ({r.Url})");
-					Console.ResetColor();
-#endif
-					return true;
-				}
-				else if (!rout.OverrideCase(r))
-				{
-#if DEBUG
-					Console.ForegroundColor = ConsoleColor.Green;
-					Console.WriteLine($"Override case not met Rout ({r.Url})");
-					Console.ResetColor();
-#endif
-					return true;
-				}
-			}
-			if (PagesRoutingTable.ContainsKey(r.Url))
-			{
-#if DEBUG
-				Console.ForegroundColor = ConsoleColor.Green;
-				Console.WriteLine($"Static Page Rout found ({r.Url})");
-				Console.ResetColor();
-#endif
-				return true;
-			}
-#if DEBUG
-			Console.ForegroundColor = ConsoleColor.Blue;
-			Console.WriteLine($"Not Static Rout ({r.Url})");
-			Console.ResetColor();
-#endif
-			return false;
-		}
 
-		public HttpResponse OnRequest(HttpRequest r)
+		
+		private static HttpResponse Respond(HttpRequest request, RouterEntry entry)
 		{
-			return Respond(r);
-		}
-
-		// Old routing system, deprecated in favor of Dynamic routing via cascading requests
-		private static RouterEntry GetRout(HttpRequest r)
-		{
-			foreach (var rout in RoutingTable)
-			{
-				if (rout.ServerPath == r.Url)
-				{
-					return rout;
-				}
-			}
-			throw new NotImplementedException("This should be imposible becouse this already checks if file is routed via this");
-		}
-		public static HttpResponse Respond(HttpRequest request)
-		{
-			if (PagesRoutingTable.ContainsKey(request.Url))
-			{
-				//return new HttpResponse(StatusCode.OK, PageManager.GetPagePlain(PagesRoutingTable[request.Url]), null, Encoding.UTF8, ContentType.text_html);
-			}
-			RouterEntry r = GetRout(request);
+			RouterEntry r = entry;
 			ContentType type = ContentType.text_plain;
 			string ext = r.LocalPath.Split('.').Last();
 			if (lookupTable.ContainsKey(ext)) { type = lookupTable[ext]; }
@@ -186,7 +119,6 @@ namespace NetBase.StaticRouting
 			}
 			catch (Exception ex)
 			{
-				Log.Incident(ex);
 				if (ex is FileNotFoundException)
 				{
 					return new HttpResponse(
@@ -203,5 +135,47 @@ namespace NetBase.StaticRouting
 				throw ex;
 			}
 		}
-	}
+        private Dictionary<string, string> ParseData(string data)
+        {
+            Dictionary<string, string> d = new Dictionary<string, string>();
+            //! Idon't know why It Works but it works
+            string[] c = data.Split('\n');
+            string lastkey = null;
+            foreach (var linem in c)
+            {
+                string line = linem.Trim("\r".ToCharArray());
+                if (line.StartsWith("#") || line == " ")
+                {
+                    // comments go brrr
+                }
+                else if (line.StartsWith("\t") || line.StartsWith("    "))
+                {
+                    if (lastkey != null)
+                    {
+                        string val = d[lastkey];
+                        d.Remove(lastkey);
+                        if (!(val == " " || val == ""))
+                        {
+                            d.Add(lastkey, val + "\n" + line.Trim("\t\r ".ToCharArray()));
+                        }
+                        else
+                        {
+                            d.Add(lastkey, line.Trim("\t\r ".ToCharArray()));
+                        }
+                    }
+                }
+                else if (line.Contains("="))
+                {
+                    d.Add(
+                        line.Split('=')[0],
+                        line.Substring(
+                            line.Split('=')[0].Length + 1).Trim("\t\r".ToCharArray()
+                        )
+                    );
+                    lastkey = line.Split('=')[0];
+                }
+            }
+            return d;
+        }
+    }
 }

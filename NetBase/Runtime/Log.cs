@@ -6,22 +6,28 @@ namespace NetBase.Runtime
 	public class Log
 	{
 		private string _dir;
+		public string _prefix;
 		private bool _writeToFile;
-		public Log(string dir, bool writeToFile)
+		public Log(string dir = null)
 		{
-			_dir = AppDomain.CurrentDomain.BaseDirectory + dir.Replace('\\', Path.DirectorySeparatorChar);
-			if (!Directory.Exists(_dir))
+			_writeToFile = dir != null;
+			if (_writeToFile)
 			{
-				Directory.CreateDirectory(_dir);
+				_dir = AppDomain.CurrentDomain.BaseDirectory + dir.Replace('\\', Path.DirectorySeparatorChar);
 			}
 		}
 		public void Write(string input)
 		{
 			string Time = DateTime.UtcNow.ToString("dd.MM.yyyy - HH:mm:ss:FFF");
-			string ToWrite = $"{Time}|{input}\n";
+			string ToWrite = $"{Time}| {_prefix} |{input}\n";
 			Console.WriteLine(ToWrite);
+			
 			if (!_writeToFile) { return; }
 
+			if (!Directory.Exists(_dir))
+			{
+				Directory.CreateDirectory(_dir);
+			}
 			if (!File.Exists(_dir + "Latest.Log"))
 			{
 				File.WriteAllText(_dir + "Latest.Log", "");
@@ -31,10 +37,15 @@ namespace NetBase.Runtime
 		public void Incident(Exception ex, string request = null)
 		{
 			string Time = DateTime.UtcNow.ToString("dd_MM_yyyy-HH_mm_ss_FFF");
-			Console.WriteLine($"{Time}|Error:\n{ex}");
-			File.WriteAllText($"{_dir}{Time}.log",
-				$"{ex}\n\n{request}"
-			);
+			Console.ForegroundColor = ConsoleColor.Red;
+			Console.Error.WriteLine($"{Time}| {_prefix} |Error:\n{ex}");
+			Console.ResetColor();
+			if (_writeToFile)
+			{
+				File.WriteAllText($"{_dir}{Time}.log",
+					$"{ex}\n\n{request}"
+				);
+			}
 		}
 	}
 }
