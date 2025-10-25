@@ -1,4 +1,4 @@
-﻿using SingularFS;
+﻿/*using SingularFS;
 using System;
 using System.Collections.Generic;
 
@@ -28,4 +28,4 @@ namespace NetBase.FileProvider
 		}
 
 	}
-}
+}*/
