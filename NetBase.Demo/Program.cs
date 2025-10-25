@@ -1,6 +1,6 @@
 ﻿using System;
 using NetBase.Communication;
-using nt = NetBase.Templating;
+//using nt = NetBase.Templating;
 using NetBase.FileProvider;
 using NetBase.StaticRouting;
 using System.IO;
@@ -14,13 +14,19 @@ namespace NetBase.Demo
 		static void Main(string[] args)
 		{
 			Server server = new Server();
-			server.router = Funcrouter;
-			server.Start(System.Net.IPAddress.Loopback,8080);
 			IFileLoader lo = /*new SingularFSFileLoader("docs.fs_");*/ new LocalFileLoader("Docs" + Path.DirectorySeparatorChar);
+			Router router = new Router();
+			router.InitFromINI(lo);
+
+			server.HandeRequest = router.OnRequest;
+			router.HandeRequest = Funcrouter;
+			
+			server.Start(System.Net.IPAddress.Loopback,8080);
+			/*
 			new nt.Components.TComponentManager(lo);
 			new nt.Pages.PageManager(lo);
 			new nt.Layouts.LayoutManager(lo);
-			Router.InitFromINI(lo);
+			*/
 			Console.ReadLine();
 		}
 		public static HttpResponse Funcrouter(HttpRequest request)
