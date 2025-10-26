@@ -16,7 +16,7 @@ namespace NetBase.Runtime
 		}
 		public void Start(string key)
 		{
-			if (key != null) { throw new Exception("Cannot start a new performance debug session while another is running"); }
+			if (_currentKey != null) { throw new Exception("Cannot start a new performance debug session while another is running"); }
 			_currentKey = key;
 			_stopwatch = Stopwatch.StartNew();
 		}

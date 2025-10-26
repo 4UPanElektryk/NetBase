@@ -21,7 +21,7 @@ namespace NetBase.Runtime
 			string Time = DateTime.UtcNow.ToString("dd.MM.yyyy - HH:mm:ss:FFF");
 			string ToWrite = $"{Time}| {_prefix} |{input}\n";
 			Console.WriteLine(ToWrite);
-			
+
 			if (!_writeToFile) { return; }
 
 			if (!Directory.Exists(_dir))
