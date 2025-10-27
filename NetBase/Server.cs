@@ -1,6 +1,5 @@
 ﻿using NetBase.Communication;
 using NetBase.Runtime;
-using NetBase.StaticRouting;
 using System;
 using System.Net;
 using System.Text;
@@ -93,57 +92,57 @@ namespace NetBase
 			HttpRequest r = HttpRequest.Parse(Request);
 			timings.Stop();
 			HttpResponse response;
-            #endregion
+			#endregion
 
-            #region Routing
-            timings.Start("Routing");
-            try
-            {
-                response = HandeRequest.Invoke(r);
-            }
-            catch (Exception ex)
-            {
-                response = new HttpResponse(
-                    StatusCode.Internal_Server_Error,
-                    $"<html><head>" +
-                    $"<meta charset=\"UTF-8\">" +
-                    $"<title>500 Internal Server Error</title>" +
-                    $"</head><body>" +
-                    $"<h1><center>500 Internal Server Error</center></h1>" +
-                    $"<h2>{ex.Message}</h2>" +
-                    $"<p>Server Encountered an exception while trying to complete the reques</p>" +
-                    $"<p>{ex.StackTrace}</p>" +
-                    $"<hr> <center><a href=\"https://github.com/4UPanElektryk/NetBase\">NetBase</a></center>" +
-                    $"</body></html>",
-                    new HttpCookies(),
-                    Encoding.UTF8,
-                    ContentType.text_html
-                );
+			#region Routing
+			timings.Start("Routing");
+			try
+			{
+				response = HandeRequest.Invoke(r);
+			}
+			catch (Exception ex)
+			{
+				response = new HttpResponse(
+					StatusCode.Internal_Server_Error,
+					$"<html><head>" +
+					$"<meta charset=\"UTF-8\">" +
+					$"<title>500 Internal Server Error</title>" +
+					$"</head><body>" +
+					$"<h1><center>500 Internal Server Error</center></h1>" +
+					$"<h2>{ex.Message}</h2>" +
+					$"<p>Server Encountered an exception while trying to complete the reques</p>" +
+					$"<p>{ex.StackTrace}</p>" +
+					$"<hr> <center><a href=\"https://github.com/4UPanElektryk/NetBase\">NetBase</a></center>" +
+					$"</body></html>",
+					new HttpCookies(),
+					Encoding.UTF8,
+					ContentType.text_html
+				);
 
-                //TODO reimplement logs
-                log.Incident(ex, "");
+				//TODO reimplement logs
+				log.Incident(ex, "");
 #if DEBUG
-                throw ex;
+				throw ex;
 #endif
-            }
-            if (response.Content == null && (int)response.Status >= 400)
-            {
-                string ReasonPhrase = Enum.GetName(typeof(StatusCode), (int)response.Status).Replace("_", " ");
-                response.ContentEncoding = Encoding.UTF8;
-                response.Body =
-                    $"<html><head>" +
-                    $"<title>{(int)response.Status} {ReasonPhrase}</title>" +
-                    $"</head><body>" +
-                    $"<center><h1>{(int)response.Status} {ReasonPhrase}</h1></center>" +
-                    $"<hr><center><a href=\"https://github.com/4UPanElektryk/NetBase\">NetBase</a></center>" +
-                    $"</body></html>";
-                response.contentType = "text/html";
-            }
-            timings.Stop();
-            #endregion
+			}
+			if (response.Content == null && (int)response.Status >= 400)
+			{
+				string ReasonPhrase = Enum.GetName(typeof(StatusCode), (int)response.Status).Replace("_", " ");
+				response.ContentEncoding = Encoding.UTF8;
+				response.Body =
+					$"<html><head>" +
+					$"<title>{(int)response.Status} {ReasonPhrase}</title>" +
+					$"</head><body>" +
+					$"<center><h1>{(int)response.Status} {ReasonPhrase}</h1></center>" +
+					$"<hr><center><a href=\"https://github.com/4UPanElektryk/NetBase\">NetBase</a></center>" +
+					$"</body></html>";
+				response.contentType = "text/html";
+			}
+			timings.Stop();
+			#endregion
 
-            #region Response
-            if (response.Content == null && response.Status == StatusCode.Not_Found)
+			#region Response
+			if (response.Content == null && response.Status == StatusCode.Not_Found)
 			{
 				string ReasonPhrase = Enum.GetName(typeof(StatusCode), (int)response.Status).Replace("_", " ");
 				response.Body =
@@ -172,7 +171,7 @@ namespace NetBase
 				hlresponse.OutputStream.Write(response.Content, 0, response.Content.Length);
 			}
 			hlresponse.Close();
-            #endregion
-        }
-    }
+			#endregion
+		}
+	}
 }
