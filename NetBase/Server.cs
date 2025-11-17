@@ -24,6 +24,7 @@ namespace NetBase
 		public void Start(string prefix)
 		{
 			_listener.Prefixes.Add(prefix);
+			_listener.IgnoreWriteExceptions = true;
 			_isRunning = true;
 			try
 			{
@@ -111,7 +112,7 @@ namespace NetBase
 					$"<h1><center>500 Internal Server Error</center></h1>" +
 					$"<h2>{ex.Message}</h2>" +
 					$"<p>Server Encountered an exception while trying to complete the reques</p>" +
-					$"<p>{ex.StackTrace}</p>" +
+					$"<pre>{ex.StackTrace}</pre>" +
 					$"<hr> <center><a href=\"https://github.com/4UPanElektryk/NetBase\">NetBase</a></center>" +
 					$"</body></html>",
 					new HttpCookies(),
