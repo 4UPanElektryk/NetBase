@@ -120,12 +120,16 @@ namespace NetBase.Communication
 			request.Cookies.ImportCookies(data.Cookies);
 			if (request.Method == HttpMethod.POST && request.Headers.ContainsKey("Content-Type") && request.Headers["Content-Type"] == "application/x-www-form-urlencoded")
 			{
-				request.PostData = GetRequestPostData(data)
-					.Split('&')
-					.ToDictionary(
-						x => x.Split('=')[0],
-						x => Uri.UnescapeDataString(x.Substring(x.Split('=')[0].Length + 1).Replace('+', ' '))
-					);
+				string PostDataUnchecked = GetRequestPostData(data);
+				if (!string.IsNullOrEmpty(PostDataUnchecked))
+				{
+					request.PostData = GetRequestPostData(data)
+						.Split('&')
+						.ToDictionary(
+							x => x.Split('=')[0],
+							x => Uri.UnescapeDataString(x.Substring(x.Split('=')[0].Length + 1).Replace('+', ' '))
+						);
+				}
 			}
 			else
 			{
